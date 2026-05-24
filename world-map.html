@@ -1,0 +1,2128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trippin' for a Year — World Map</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; height: 100vh; display: flex; flex-direction: column; margin: 0; }
+.header-img { max-width: 40%; height: auto; display: block; }
+.content-wrap { display: flex; flex: 1; min-height: 0; }
+#map { flex: 1; }
+.sidebar { width: 280px; background: #1a1a2e; color: #eee; padding: 24px 20px; display: flex; flex-direction: column; gap: 20px; overflow-y: auto; box-shadow: -2px 0 8px rgba(0,0,0,.3); z-index: 1000; }
+.sidebar h2 { font-size: 18px; font-weight: 700; letter-spacing: .5px; }
+.sidebar .sub { font-size: 12px; opacity: .6; margin-top: -14px; }
+.filter-group { display: flex; flex-direction: column; gap: 6px; }
+.filter-group label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .8px; opacity: .7; }
+.filter-group select, .filter-group input { padding: 8px 10px; border: none; border-radius: 6px; font-size: 14px; background: #16213e; color: #eee; outline: 1px solid #0f3460; }
+.filter-group select:focus, .filter-group input:focus { outline-color: #e94560; }
+.filter-group input[type="range"] { width: 100%; accent-color: #e94560; padding: 0; }
+.year-display { font-size: 24px; font-weight: 700; color: #e94560; text-align: center; }
+.year-labels { display: flex; justify-content: space-between; font-size: 11px; opacity: .5; margin-top: -4px; }
+.reset-btn { background: #e94560; color: #fff; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600; margin-top: 4px; }
+.reset-btn:hover { background: #c73650; }
+.result-count { font-size: 13px; opacity: .6; text-align: center; }
+.marker-popup { font-size: 13px; line-height: 1.5; }
+.marker-popup h3 { margin: 0 0 4px; color: #e94560; font-size: 15px; }
+.marker-popup p { margin: 2px 0; }
+.marker-popup a { color: #3498db; text-decoration: none; font-weight: 600; display: inline-block; margin-top: 4px; }
+.marker-popup a:hover { text-decoration: underline; }
+.category-tag { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 10px; background: #eee; color: #333; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+.legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; opacity: .8; }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; border: 1px solid rgba(255,255,255,.3); }
+@media (max-width: 700px) { body { flex-direction: column-reverse; } .sidebar { width: 100%; max-height: 200px; flex-direction: row; flex-wrap: wrap; gap: 10px; padding: 14px; overflow-y: auto; } .sidebar h2, .sidebar .sub, .result-count, .legend { display: none; } .filter-group { flex: 1; min-width: 120px; } }
+</style>
+</head>
+<body>
+
+<img src="file:///Users/naomihama/Desktop/header.jpeg" alt="Trippin' for a Year" class="header-img">
+
+<div class="content-wrap">
+
+<div id="map"></div>
+
+<div class="sidebar">
+  <div class="filter-group">
+    <label>Places we've been</label>
+    <input type="range" id="yearSlider" min="1975" max="2025" value="2025" step="1">
+    <div class="year-display" id="yearDisplay">2025</div>
+    <div class="year-labels"><span>1975</span><span>2025</span></div>
+  </div>
+
+  <div class="filter-group">
+    <label>Exact Year</label>
+    <select id="yearFilter">
+      <option value="all">All Years</option>
+    </select>
+  </div>
+
+  <div class="filter-group">
+    <label>Country</label>
+    <select id="countryFilter">
+      <option value="all">All Countries</option>
+    </select>
+  </div>
+
+  <div class="filter-group">
+    <label>Category</label>
+    <select id="categoryFilter">
+      <option value="all">All Categories</option>
+      <option value="Blog">Blog</option>
+      <option value="Food">Food</option>
+      <option value="Cats">Cats</option>
+      <option value="Home">Home</option>
+      <option value="Photos">Photos</option>
+    </select>
+  </div>
+
+  <button class="reset-btn" id="resetBtn">Reset Filters</button>
+  <div class="result-count" id="resultCount"></div>
+  <div class="legend">
+    <div class="legend-item"><span class="legend-dot" style="background:#e94560"></span>Blog</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#f39c12"></span>Food</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#9b59b6"></span>Cats</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#2ecc71"></span>Home</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#3498db"></span>Photos</div>
+  </div>
+</div>
+
+<script>
+var DATA = 
+  [
+    {
+      "name": "A Quick Getaway to Frode’s Hometown: Stavanger",
+      "lat": 58.9699756,
+      "lng": 5.7331073,
+      "year": 2025,
+      "country": "Norway",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2025/06/a-quick-getaway-to-frodes-hometown.html",
+      "desc": "A Quick Getaway to Frode’s Hometown: Stavanger We spent a short but sweet five days in Stavanger, and even though the..."
+    },
+    {
+      "name": "20 days Holiday in Europe",
+      "lat": 40.1208752,
+      "lng": 9.012892599999999,
+      "year": 2025,
+      "country": "Italy",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2025/06/20-days-holiday-in-europe.html",
+      "desc": "It’s been a while since Frode and I took a proper holiday just for ourselves. We’ve had holidays, but since COVID..."
+    },
+    {
+      "name": "Pasta Diary",
+      "lat": 40.1208752,
+      "lng": 9.012892599999999,
+      "year": 2025,
+      "country": "Italy",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2025/06/pasta-diary.html",
+      "desc": "One of the main reasons we decided to come to Italy for our holiday this time was… the food! All the yummy Italian food..."
+    },
+    {
+      "name": "Back to India—Again!",
+      "lat": 28.7,
+      "lng": 77.1,
+      "year": 2025,
+      "country": "India",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2025/04/back-to-indiaagain.html",
+      "desc": "Well… I didn’t expect to return to India quite so soon, but here I am—just four weeks after my last visit. This time, I..."
+    },
+    {
+      "name": "A Return to India—Eleven Years Later",
+      "lat": 12.97,
+      "lng": 77.59,
+      "year": 2025,
+      "country": "India",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2025/04/a-return-to-indiaeleven-years-later.html",
+      "desc": "It’s hard to believe it’s been eleven years since Frode and I last found ourselves in Mumbai, back when we were..."
+    },
+    {
+      "name": "Taketomi Island, Okinawa",
+      "lat": 26.33,
+      "lng": 127.8,
+      "year": 2018,
+      "country": "Japan",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2018/07/taketomi-island-okinawa.html",
+      "desc": ""
+    },
+    {
+      "name": "Cat Island 2 - Yushima",
+      "lat": 36.2,
+      "lng": 138.25,
+      "year": 2017,
+      "country": "Japan",
+      "category": "Cats",
+      "url": "https://www.trippinforayear.com/2017/08/cat-island-2-yushima.html",
+      "desc": "湯島 Cat Island 🐱 🐱 🐱"
+    },
+    {
+      "name": "Food in Malaysia",
+      "lat": 4.21,
+      "lng": 101.98,
+      "year": 2017,
+      "country": "Malaysia",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2017/08/we-love-going-to-country-with-great-food.html",
+      "desc": "We love going to a country with great food. Malaysia is definitely one of them. Even though we were only in Kuala..."
+    },
+    {
+      "name": "Love XinJiang Food.....",
+      "lat": 35.86,
+      "lng": 104.2,
+      "year": 2016,
+      "country": "China",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2016/10/love-xinjiang-food.html",
+      "desc": "XinJiang has some amazing food. Most restaurants in XinJiang makes handmade noodle, often on the spot. Sometimes the..."
+    },
+    {
+      "name": "10 Days in China's Wild West",
+      "lat": 39.47,
+      "lng": 75.99,
+      "year": 2016,
+      "country": "China",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2016/09/10-days-in-chinas-wild-west.html",
+      "desc": "I am off to China! Since there is no direct flight from Tokyo to Urumqi, I am going via Chengdu (Sichuan province)...."
+    },
+    {
+      "name": "Planning a mini trip to.....",
+      "lat": 31.23,
+      "lng": 121.47,
+      "year": 2016,
+      "country": "China",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2016/09/planning-mini-trip-to.html",
+      "desc": "It's been over a year and half since we came back from our big year round the world trip and while we've been taking..."
+    },
+    {
+      "name": "The Cat Island",
+      "lat": 38.2942075,
+      "lng": 141.4164456,
+      "year": 2016,
+      "country": "Japan",
+      "category": "Cats",
+      "url": "https://www.trippinforayear.com/2016/09/the-cat-island.html",
+      "desc": "Ah we finally made it! Ever since we moved to Japan, we always wanted to visit the Cat Island. FYI - there are a number..."
+    },
+    {
+      "name": "Miyajima Island in Hiroshima",
+      "lat": 34.39,
+      "lng": 132.46,
+      "year": 2016,
+      "country": "Japan",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2016/05/miyajima-island-in-hiroshima.html",
+      "desc": "Itsukushima shrine Update"
+    },
+    {
+      "name": "Snowboarding in Niigata",
+      "lat": 37.91,
+      "lng": 139.04,
+      "year": 2016,
+      "country": "Japan",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2016/01/snowboarding-in-niigata.html",
+      "desc": "Snowboarding time!! Update"
+    },
+    {
+      "name": "Kagawa",
+      "lat": 34.27,
+      "lng": 134.06,
+      "year": 2015,
+      "country": "Japan",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2015/12/kagawa.html",
+      "desc": "Kagawa"
+    },
+    {
+      "name": "Inawashiro in Fukushima Prefecture",
+      "lat": 37.76,
+      "lng": 140.47,
+      "year": 2015,
+      "country": "Japan",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2015/10/inawashiro-in-fukushima-prefecture.html",
+      "desc": ""
+    },
+    {
+      "name": "View from our apartment in Tokyo....",
+      "lat": 35.68,
+      "lng": 139.69,
+      "year": 2015,
+      "country": "Japan",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2015/06/view-from-our-apartment-in-tokyo.html",
+      "desc": "Beautiful Sunset ....so we decided to stay put for awhile in Tokyo - The apartment has a nice view of Tokyo tower and..."
+    },
+    {
+      "name": "Photos from San Francisco",
+      "lat": 37.77,
+      "lng": -122.42,
+      "year": 2015,
+      "country": "United States",
+      "category": "Photos",
+      "url": "https://www.trippinforayear.com/2015/01/photos-from-san-francisco.html",
+      "desc": "\" height=\"200\" width=\"200\" />"
+    },
+    {
+      "name": "Our last stop - San Francisco",
+      "lat": 37.77,
+      "lng": -122.42,
+      "year": 2015,
+      "country": "United States",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2015/01/our-last-stop-san-francisco_15.html",
+      "desc": "Our last stop on this trip was San Francisco! We really enjoyed our stay, probably our favorite city in the USA so far!..."
+    },
+    {
+      "name": "Trippin' around Cuba !",
+      "lat": 23.11,
+      "lng": -82.37,
+      "year": 2015,
+      "country": "Cuba",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2015/01/trippin-around-cuba.html",
+      "desc": "We just returned from our 10 days trip in Cuba. And it was fun! Our itinerary in Cuba was: 1) Havana for three nights..."
+    },
+    {
+      "name": "Trinidad, Cuba",
+      "lat": 21.8,
+      "lng": -79.98,
+      "year": 2015,
+      "country": "Cuba",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2015/01/trinidad-cuba.html",
+      "desc": "Photos from Trinidad, Cuba... More photos from Trinidad..."
+    },
+    {
+      "name": "Varadero, Cuba",
+      "lat": 23.16,
+      "lng": -81.25,
+      "year": 2015,
+      "country": "Cuba",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2015/01/varadero-cuba.html",
+      "desc": "Three days in Varadero, Cuba... Off to Trinidad....."
+    },
+    {
+      "name": "Photos from Havana, Cuba",
+      "lat": 23.11,
+      "lng": -82.37,
+      "year": 2014,
+      "country": "Cuba",
+      "category": "Photos",
+      "url": "https://www.trippinforayear.com/2014/12/photos-from-havana-cuba.html",
+      "desc": "Our first stop in Cuba - Havana!"
+    },
+    {
+      "name": "Cancún, Mexico",
+      "lat": 23.63,
+      "lng": -102.55,
+      "year": 2014,
+      "country": "Mexico",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/12/cancun-mexico.html",
+      "desc": "Cancún was nice. We stayed in the 'hotel zone' which meant everything was extremely overpriced but still the beach was..."
+    },
+    {
+      "name": "We love beach",
+      "lat": 23.63,
+      "lng": -102.55,
+      "year": 2014,
+      "country": "Mexico",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/12/we-love-beach.html",
+      "desc": "Beach photos from Cancún"
+    },
+    {
+      "name": "Rat infested dump with Airbnb",
+      "lat": 21.161908,
+      "lng": -86.85152790000001,
+      "year": 2014,
+      "country": "Mexico",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/12/rat-infested-dump-with-airbnb.html",
+      "desc": "Until this point, we have been pretty lucky with Airbnb. We've done close to 20 Airbnb stays all over the world and..."
+    },
+    {
+      "name": "Six days in Panama",
+      "lat": 8.98,
+      "lng": -79.52,
+      "year": 2014,
+      "country": "Panama",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/12/six-days-in-panama_1.html",
+      "desc": "We've been so busy with our secret project that I have not had time to update our blog. So here's the quick update on..."
+    },
+    {
+      "name": "Our Peru adventure",
+      "lat": -16.4,
+      "lng": -71.54,
+      "year": 2014,
+      "country": "Peru",
+      "category": "Home",
+      "url": "https://www.trippinforayear.com/2014/11/our-peru-adventure.html",
+      "desc": "This is the route we took We just returned from our two weeks adventure travelling around Peru - We had so much fun!..."
+    },
+    {
+      "name": "Photos from Ica",
+      "lat": -14.07,
+      "lng": -75.73,
+      "year": 2014,
+      "country": "Peru",
+      "category": "Photos",
+      "url": "https://www.trippinforayear.com/2014/11/photos-from-ica.html",
+      "desc": "Photos from Ica......."
+    },
+    {
+      "name": "Photos from Arequipa",
+      "lat": -16.4,
+      "lng": -71.54,
+      "year": 2014,
+      "country": "Peru",
+      "category": "Photos",
+      "url": "https://www.trippinforayear.com/2014/11/photos-from-arequipa.html",
+      "desc": "Photos from Arequipa..."
+    },
+    {
+      "name": "Photos from Machu Picchu",
+      "lat": -13.16,
+      "lng": -72.54,
+      "year": 2014,
+      "country": "Peru",
+      "category": "Photos",
+      "url": "https://www.trippinforayear.com/2014/11/photos-from-machu-picchu.html",
+      "desc": "Photos from Machu Picchu...."
+    },
+    {
+      "name": "Photos from Cusco",
+      "lat": -13.53,
+      "lng": -71.97,
+      "year": 2014,
+      "country": "Peru",
+      "category": "Home",
+      "url": "https://www.trippinforayear.com/2014/11/photos-from-cusco.html",
+      "desc": "The view from our hotel - Wara Wara Photos from Cusco....."
+    },
+    {
+      "name": "Cats everywhere - our favourite place in Lima",
+      "lat": -12.05,
+      "lng": -77.04,
+      "year": 2014,
+      "country": "Peru",
+      "category": "Home",
+      "url": "https://www.trippinforayear.com/2014/11/cats-everywhere-our-favourite-place-in.html",
+      "desc": "We found this park by accident. We were staying at the Casa Cielo and the Miraflores Central Park / Kennedy Park were..."
+    },
+    {
+      "name": "Most scenic border crossing - Mendoza to Santiago",
+      "lat": -32.89,
+      "lng": -68.83,
+      "year": 2014,
+      "country": "Argentina",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/10/most-scenic-border-crossing-mendoza-to.html",
+      "desc": "One of the reasons why we broke the trip from Buenos Aires to Santiago into two was that the scenery when crossing the..."
+    },
+    {
+      "name": "Photos from Mendoza",
+      "lat": -32.89,
+      "lng": -68.83,
+      "year": 2014,
+      "country": "Argentina",
+      "category": "Photos",
+      "url": "https://www.trippinforayear.com/2014/10/photos-from-mendoza.html",
+      "desc": "More photos from beautiful Mendoza..."
+    },
+    {
+      "name": "Winery & Hot Spring in Mendoza",
+      "lat": -32.89,
+      "lng": -68.83,
+      "year": 2014,
+      "country": "Argentina",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/10/winery-hot-spring-in-mendoza.html",
+      "desc": "One of the things we really wanted to do in Mendoza was of course the winery tour. We didn't book anything in advance..."
+    },
+    {
+      "name": "Buenos Aires to Mendoza",
+      "lat": -32.89,
+      "lng": -68.83,
+      "year": 2014,
+      "country": "Argentina",
+      "category": "Cats",
+      "url": "https://www.trippinforayear.com/2014/10/buenos-aires-to-mendoza.html",
+      "desc": "So after almost 3 weeks in Buenos Aires, we were on the move again. We took the overnight bus with CATA International -..."
+    },
+    {
+      "name": "More photos from Buenos Aires...",
+      "lat": -34.6,
+      "lng": -58.38,
+      "year": 2014,
+      "country": "Argentina",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/10/more-photos-from-buenos-aires.html",
+      "desc": "More photos from Buenos Aires, Argentina... And more..!"
+    },
+    {
+      "name": "Peeved in Caminito - La Boca, the street full of happy colourful buildings",
+      "lat": -34.6,
+      "lng": -58.38,
+      "year": 2014,
+      "country": "Argentina",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/10/peeved-in-caminito-la-boca-street-full.html",
+      "desc": "We walked all the way from Plaza de Mayo to Caminito, actually we got a little lost and walked past it. We were on the..."
+    },
+    {
+      "name": "The most beautiful bookshop",
+      "lat": -34.6,
+      "lng": -58.38,
+      "year": 2014,
+      "country": "Argentina",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/10/the-most-beautiful-bookshop.html",
+      "desc": "Another really cool place we visited this week in Buenos Aires was El Ateneo , also known as the world's most beautiful..."
+    },
+    {
+      "name": "Checking out the Chinatown in Buenos Aires",
+      "lat": -34.6,
+      "lng": -58.38,
+      "year": 2014,
+      "country": "Argentina",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/10/checking-out-chinatown-in-buenos-aires.html",
+      "desc": "See? our cool neighbourhood with cool graffiti We are staying in a cool and supposedly hip little area called Palermo..."
+    },
+    {
+      "name": "Argentinian Wines",
+      "lat": -34.6,
+      "lng": -58.38,
+      "year": 2014,
+      "country": "Argentina",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/10/argentinian-wines.html",
+      "desc": "I love wines - Did you know? :-) So any country with great wines at a reasonable price is my favorite place to visit...."
+    },
+    {
+      "name": "Bombinhas to Montevideo to Buenos Aires",
+      "lat": -34.9055016,
+      "lng": -56.1851147,
+      "year": 2014,
+      "country": "Argentina",
+      "category": "Cats",
+      "url": "https://www.trippinforayear.com/2014/10/bombinhas-to-montevideo-to-buenos-aires.html",
+      "desc": "After a very relaxing week in Bombinhas, we were on the move again.... (we are getting a little sick of moving, can you..."
+    },
+    {
+      "name": "From São Paulo to Bombinhas",
+      "lat": -27.14,
+      "lng": -48.52,
+      "year": 2014,
+      "country": "Brazil",
+      "category": "Cats",
+      "url": "https://www.trippinforayear.com/2014/09/from-sao-paulo-to-bombinhas.html",
+      "desc": "After a short stay in São Paulo, we headed South. We caught an overnight bus to a little beach town called Balneário..."
+    },
+    {
+      "name": "Checking out the Japanese town in São Paulo, Brazil",
+      "lat": -27.14,
+      "lng": -48.52,
+      "year": 2014,
+      "country": "Brazil",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/09/checking-out-japanese-town-in-sao-paulo.html",
+      "desc": "South Africa to South America! After almost a month in South Africa. We crossed the South Atlantic ocean and arrived in..."
+    },
+    {
+      "name": "Safari Trippin'",
+      "lat": -23.9883848,
+      "lng": 31.55474019999997,
+      "year": 2014,
+      "country": "South Africa",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/09/safari-trippin.html",
+      "desc": "From the moment we arrived in South Africa, we'd been planning and looking forward to this: A genuine African safari!..."
+    },
+    {
+      "name": "Hiking in South Africa",
+      "lat": -33.93,
+      "lng": 18.42,
+      "year": 2014,
+      "country": "South Africa",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/09/hiking-in-south-africa.html",
+      "desc": "So we were invited to this group called ' Slowly-up-the-hills ' - you'd normally have to be above certain age (fifty to..."
+    },
+    {
+      "name": "Getting Brazilian Visa in Cape Town",
+      "lat": -33.93,
+      "lng": 18.42,
+      "year": 2014,
+      "country": "Brazil",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/09/getting-brazilian-visa-in-cape-town.html",
+      "desc": "Brazil is one of a small number of countries where I need a visa during this trip (among Myanmar, India and Nepal)...."
+    },
+    {
+      "name": "Our budget update",
+      "lat": -30.56,
+      "lng": 22.94,
+      "year": 2014,
+      "country": "South Africa",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/09/our-budget-update.html",
+      "desc": "So before commencing our trip (seven months ago), we set a clear budget plan for our trip. We've been pretty good at..."
+    },
+    {
+      "name": "Cape of Good Hope and more.....",
+      "lat": -33.93,
+      "lng": 18.42,
+      "year": 2014,
+      "country": "South Africa",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/09/cape-of-good-hope-and-more.html",
+      "desc": "Fish Hoek Beach Boulders Beach Smitswinkel Bay Cape Town has some amazing beaches..... We were lucky enough to get a..."
+    },
+    {
+      "name": "Animal Day",
+      "lat": -34.19712487164376,
+      "lng": 18.451151847839355,
+      "year": 2014,
+      "country": "South Africa",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/08/animal-day.html",
+      "desc": "We've been settled in our little apartment in Sunny Cove, outside Cape Town, South Africa, for about two weeks now..."
+    },
+    {
+      "name": "Crazy HOT!",
+      "lat": 25.2,
+      "lng": 55.27,
+      "year": 2014,
+      "country": "United Arab Emirates",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/08/crazy-hot.html",
+      "desc": "Dubai is HOT. I mean it's really hot..........temperature wise. I guess we never looked into the temperature (or..."
+    },
+    {
+      "name": "More photos from Vienna, Bratislava, Budapest & Zurich.....",
+      "lat": 48.15,
+      "lng": 17.11,
+      "year": 2014,
+      "country": "Austria",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/08/more-photos-from-vienna-bratislava.html",
+      "desc": "More photos from Vienna, Bratislava, Budapest & Zurich..... Vienna, Austria Bratislava, Slovakia Budapest, Hungary..."
+    },
+    {
+      "name": "Is EuRail Worth It?",
+      "lat": 39.07,
+      "lng": 21.82,
+      "year": 2014,
+      "country": "Greece",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/08/is-eurail-worth-it.html",
+      "desc": "Is EuRail Worth It? We purchased Eurail global pass which is valid for 3 months (continuous travel, first class \"saver\"..."
+    },
+    {
+      "name": "Feelin' welcome in Zurich",
+      "lat": 47.3686498,
+      "lng": 8.539182500000038,
+      "year": 2014,
+      "country": "Switzerland",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/08/feelin-welcome-in-zurich.html",
+      "desc": "Zurich is one of the most expensive places for accommodation that we've seen! For $200, you can get a very basic room..."
+    },
+    {
+      "name": "Budapest Recommendation",
+      "lat": 47.5,
+      "lng": 19.04,
+      "year": 2014,
+      "country": "Hungary",
+      "category": "Cats",
+      "url": "https://www.trippinforayear.com/2014/08/budapest-recommendation.html",
+      "desc": "There are a lot to see and do in Budapest. We only had a few days but we managed to do quite a bit! Here are some of my..."
+    },
+    {
+      "name": "Ticket line terror",
+      "lat": 47.497912,
+      "lng": 19.04023499999994,
+      "year": 2014,
+      "country": "Hungary",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/08/ticket-line-terror.html",
+      "desc": "We thought it would be simple - all we wanted to get was a simple train ticket reservation, using our EuRail pass, to..."
+    },
+    {
+      "name": "Rip-off ridin'",
+      "lat": 48.1458923,
+      "lng": 17.107137299999977,
+      "year": 2014,
+      "country": "Slovakia",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/08/rip-off-ridin.html",
+      "desc": "Just a quick entry to warn others about the taxi experience we had in Bratislava , Slovakia, in the hope that others..."
+    },
+    {
+      "name": "Packed with tourists - Prague",
+      "lat": 50.08,
+      "lng": 14.42,
+      "year": 2014,
+      "country": "Czech Republic",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/08/packed-with-tourists-prague.html",
+      "desc": "Beautiful city but this is too much! No doubt Prague is a beautiful city. However the number of tourists here is so..."
+    },
+    {
+      "name": "Fun in Berlin!",
+      "lat": 52.52,
+      "lng": 13.4,
+      "year": 2014,
+      "country": "Germany",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/08/fun-in-berlin.html",
+      "desc": "So I really liked Berlin. It is a very interesting city, it's too bad we could only stay for a couple of days... this..."
+    },
+    {
+      "name": "Trippin' in Poland",
+      "lat": 52.52,
+      "lng": 13.4,
+      "year": 2014,
+      "country": "Germany",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/08/trippin-in-poland.html",
+      "desc": "We entered Poland overland from Lithuania, our first stop was the capital of Poland, Warsaw. We arrived on the 70th..."
+    },
+    {
+      "name": "Kraków album",
+      "lat": 50.06,
+      "lng": 19.94,
+      "year": 2014,
+      "country": "Poland",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/08/krakow-album.html",
+      "desc": "Photos from the beautiful city of Kraków...."
+    },
+    {
+      "name": "Auschwitz",
+      "lat": 50.0343982,
+      "lng": 19.20977819999996,
+      "year": 2014,
+      "country": "Poland",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/08/auschwitz.html",
+      "desc": "Auschwitz.. just the name itself conjures up a vision of horrors. Entering Auschwitz I One of the main reasons we went..."
+    },
+    {
+      "name": "Warsaw Uprising!",
+      "lat": 52.2296756,
+      "lng": 21.012228700000037,
+      "year": 2014,
+      "country": "Poland",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/08/warsaw-uprising.html",
+      "desc": "Today, when we were walking around the city, there were a bunch of people in Warsaw sporting the anchor-like logo of..."
+    },
+    {
+      "name": "Photos from Estonia, Latvia & Lithuania",
+      "lat": 56.95,
+      "lng": 24.11,
+      "year": 2014,
+      "country": "Estonia",
+      "category": "Photos",
+      "url": "https://www.trippinforayear.com/2014/07/photos-from-estonia-latvia-lithuania.html",
+      "desc": "Tallinn, Estonia Riga, Latvia Lithuania First stop: Tallinn, Estonia Second stop: Riga, Latvia T We didn't stop in..."
+    },
+    {
+      "name": "Lightning tour of eastern Europe",
+      "lat": 56.9496487,
+      "lng": 24.10518639999998,
+      "year": 2014,
+      "country": "Latvia",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/07/lightning-tour-of-eastern-europe.html",
+      "desc": "We are crazy. You probably knew that, if you've been reading this blog or happen to know us in real life, but here's..."
+    },
+    {
+      "name": "Fun weekend in Finland (Part 2)",
+      "lat": 61.92,
+      "lng": 25.75,
+      "year": 2014,
+      "country": "Finland",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/07/fun-weekend-in-finland-part-2.html",
+      "desc": "So we headed off to Emilia's Summer House number 2 on the next day. We got onto another boat and off we went with..."
+    },
+    {
+      "name": "Fun weekend in Finland (Part 1)",
+      "lat": 60.45,
+      "lng": 22.27,
+      "year": 2014,
+      "country": "Finland",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/07/fun-weekend-in-finland-part-1.html",
+      "desc": "So Finland was amazing, thanks to Emilia and Mikke. After arriving in Turku, we drove to Pyhäranta which is about an..."
+    },
+    {
+      "name": "Crossing Baltic sea from Stockholm to Turku",
+      "lat": 59.33,
+      "lng": 18.07,
+      "year": 2014,
+      "country": "Finland",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/07/crossing-baltic-sea-from-stockholm-to.html",
+      "desc": "After a very relaxing week in Stockholm, we took a ferry - The Viking Line - to Turku, Finland. The Viking Line! Early..."
+    },
+    {
+      "name": "Checking out the 'Beach' in Stockholm",
+      "lat": 59.33,
+      "lng": 18.07,
+      "year": 2014,
+      "country": "Sweden",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/07/checking-out-beach-in-stockholm.html",
+      "desc": "Getting ready for picnic on the beach I love the beach so I wanted to check out the beach in Stockholm on my birthday...."
+    },
+    {
+      "name": "12 days in Norway",
+      "lat": 59.3327036,
+      "lng": 18.0656255,
+      "year": 2014,
+      "country": "Norway",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/07/12-days-in-norway.html",
+      "desc": "We've been super busy the last couple of weeks, so we haven't been updating our blog. Now that we have some time in..."
+    },
+    {
+      "name": "Trippin' home - Stavanger, Norway",
+      "lat": 58.9699756,
+      "lng": 5.733107300000029,
+      "year": 2014,
+      "country": "Norway",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/07/trippin-home-stavanger-norway.html",
+      "desc": "Having reached the half-way point in our trip, it was time to go to my point of origin: Stavanger, Norway. I hadn't..."
+    },
+    {
+      "name": "Quick Stopover in Gothenburg, Sweden",
+      "lat": 57.70887,
+      "lng": 11.97456,
+      "year": 2014,
+      "country": "Sweden",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/07/photos-from-gothenburg-sweden.html",
+      "desc": "A Short Stay in Gothenburg, Sweden on Our Way to Oslo After a nice stay in Copenhagen, we caught a train to Gothenburg..."
+    },
+    {
+      "name": "Two days in Copenhagen",
+      "lat": 55.6760968,
+      "lng": 12.5683371,
+      "year": 2014,
+      "country": "Denmark",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/07/photos-from-copenhagen.html",
+      "desc": "Day 1 in Copenhagen We stayed 3 nights in Copenhagen at a very cozy Airbnb place. It was so nice that we cooked dinner..."
+    },
+    {
+      "name": "Heading even further up north – Copenhagen",
+      "lat": 55.6760968,
+      "lng": 12.568337100000008,
+      "year": 2014,
+      "country": "Denmark",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/07/heading-even-further-up-north-copenhagen.html",
+      "desc": "So we were finally heading to a Scandinavian country! I’ve been told that everything’s really expensive up north so did..."
+    },
+    {
+      "name": "The Bremen Town Musicians",
+      "lat": 53.08,
+      "lng": 8.81,
+      "year": 2014,
+      "country": "Germany",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/07/the-bremen-town-musicians.html",
+      "desc": "In order to make it to Frode’s grandma’s 80 th birthday, we had to head north after Amsterdam. We weren’t exactly sure..."
+    },
+    {
+      "name": "Short stay in Amsterdam",
+      "lat": 52.37,
+      "lng": 4.89,
+      "year": 2014,
+      "country": "Netherlands",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/07/short-stay-in-amsterdam.html",
+      "desc": "So after Bruges, we took the trains up north to Amsterdam (via Brussels & Rotterdam). We decided to stay for two days..."
+    },
+    {
+      "name": "Photos from Bruges, Belgium",
+      "lat": 51.21,
+      "lng": 3.22,
+      "year": 2014,
+      "country": "Belgium",
+      "category": "Photos",
+      "url": "https://www.trippinforayear.com/2014/06/photos-from-bruges-belgium.html",
+      "desc": "Photos from beautiful Bruges.... For more...."
+    },
+    {
+      "name": "In Bruges (not the movie)",
+      "lat": 51.209348,
+      "lng": 3.2246995000000425,
+      "year": 2014,
+      "country": "Belgium",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/06/in-bruges-not-movie.html",
+      "desc": "Where better to go after the hustle and bustle of big city Paris, than the tiny, historical Bruges? I know, we couldn't..."
+    },
+    {
+      "name": "Photos from Paris, France",
+      "lat": 48.86,
+      "lng": 2.35,
+      "year": 2014,
+      "country": "France",
+      "category": "Photos",
+      "url": "https://www.trippinforayear.com/2014/06/photos-from-paris-france.html",
+      "desc": "10 days in Paris...."
+    },
+    {
+      "name": "Mum joins: trippin' for a month....",
+      "lat": 48.86,
+      "lng": 2.35,
+      "year": 2014,
+      "country": "France",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/06/mum-joins-trippin-for-month.html",
+      "desc": "So for the next month, mum will be traveling with us (....and her very 'talkative' friend). It's going to be a very..."
+    },
+    {
+      "name": "Daytrippin' to Versailles",
+      "lat": 48.8,
+      "lng": 2.14,
+      "year": 2014,
+      "country": "France",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/05/daytrippin-to-versailles.html",
+      "desc": ""
+    },
+    {
+      "name": "Meeting up with our fellow travelers from Myanmar",
+      "lat": 48.86,
+      "lng": 2.35,
+      "year": 2014,
+      "country": "France",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/06/meeting-up-with-our-fellow-travelers.html",
+      "desc": "We are so happy we were able to catch up with Margaux and Paule in Paris!!!!!! In case you are wondering, they are the..."
+    },
+    {
+      "name": "Picnic in Paris",
+      "lat": 48.847759,
+      "lng": 2.4394968999999946,
+      "year": 2014,
+      "country": "France",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/06/picnic-in-paris.html",
+      "desc": "As it happened, our visit to Paris overlapped neatly with my friend Mathieu's. Some sort of tower..? Mathieu, as you..."
+    },
+    {
+      "name": "The best-laid plans..",
+      "lat": 48.856614,
+      "lng": 2.3522219000000177,
+      "year": 2014,
+      "country": "France",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/06/the-best-laid-plans.html",
+      "desc": "An unexpected plan change - or how we learned to stop worrying and love the train strikes in France. So we wanted to..."
+    },
+    {
+      "name": "Last stop in Italy: Milan",
+      "lat": 45.4654219,
+      "lng": 9.18592430000001,
+      "year": 2014,
+      "country": "Italy",
+      "category": "Home",
+      "url": "https://www.trippinforayear.com/2014/06/last-stop-in-italy-milan.html",
+      "desc": "Our last stop in Italy was Milan, financial and fashion capital. Very nice city but also very expensive. We rented a..."
+    },
+    {
+      "name": "Daytrippin' to Venice",
+      "lat": 45.4408474,
+      "lng": 12.31551509999997,
+      "year": 2014,
+      "country": "Italy",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/06/day-trip-to-venice.html",
+      "desc": "We were up bright and early at 6:30am for a full day of exploring Venice! This was my second time visiting (the first..."
+    },
+    {
+      "name": "Different kind of pastas....",
+      "lat": 41.87,
+      "lng": 12.57,
+      "year": 2014,
+      "country": "Italy",
+      "category": "Food",
+      "url": "https://www.trippinforayear.com/2014/06/different-kind-of-pastas.html",
+      "desc": "There are so many different kind of pasta in Italy. I am always very confused at the restaurant trying to remember..."
+    },
+    {
+      "name": "Daytrippin' to Pompeii",
+      "lat": 40.7461572,
+      "lng": 14.498934400000053,
+      "year": 2014,
+      "country": "Italy",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/06/daytippin-to-pompeii.html",
+      "desc": "We were basing ourselves in Sorrento, south of Napoli, because we wanted to go to the Amalfi coast area, and to see the..."
+    },
+    {
+      "name": "Beautiful Amalfi Coast - Sorrento, Positano & Amalfi",
+      "lat": 40.6340026,
+      "lng": 14.60268050000002,
+      "year": 2014,
+      "country": "Italy",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/06/beautiful-amalfi-coast-sorrento.html",
+      "desc": "Today was a big one—our first time visiting Positano and the famous Amalfi Coast! This region is easily one of the most..."
+    },
+    {
+      "name": "Two Days in Rome (Part 2)",
+      "lat": 41.902916,
+      "lng": 12.453389,
+      "year": 2014,
+      "country": "Vatican City",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/06/two-days-of-history-art-gelato-rome.html",
+      "desc": "Breakfast Our second day in Rome! We kicked off the day around 7:30am, fuelled by a decent hotel breakfast, and started..."
+    },
+    {
+      "name": "Two Days in Rome (Part 1)",
+      "lat": 41.8967068,
+      "lng": 12.4822025,
+      "year": 2014,
+      "country": "Italy",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/06/rome-vatican-photos.html",
+      "desc": "After nearly 29 hours of train travel, we finally rolled into Rome—tired, slightly disheveled, but excited to be in one..."
+    },
+    {
+      "name": "Our journey to Italy",
+      "lat": 41.8723889,
+      "lng": 12.48018019999995,
+      "year": 2014,
+      "country": "France",
+      "category": "Home",
+      "url": "https://www.trippinforayear.com/2014/06/our-journey-to-italy.html",
+      "desc": "We survived! OK, so it wasn't really a do or die scenario, but it sure felt like it... What am I on about this time?..."
+    },
+    {
+      "name": "Catching up with Shirley in Barcelona",
+      "lat": 41.39,
+      "lng": 2.16,
+      "year": 2014,
+      "country": "Spain",
+      "category": "Cats",
+      "url": "https://www.trippinforayear.com/2014/06/catching-up-with-shirley-in-barcelona.html",
+      "desc": "@ El Xampanyet The best part of traveling around the world is definitely being able to catch up with friends around the..."
+    },
+    {
+      "name": "Barcelona Photos",
+      "lat": 41.3873974,
+      "lng": 2.168568,
+      "year": 2014,
+      "country": "Spain",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/06/barcelona-photos.html",
+      "desc": "More photos from Barcelona.... Land of Pinchos"
+    },
+    {
+      "name": "Hop on and off",
+      "lat": 41.39,
+      "lng": 2.16,
+      "year": 2014,
+      "country": "Spain",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/06/hop-on-and-off.html",
+      "desc": "We really like the 'Hop On & Off Bus' that they have everywhere in the world - Very touristy and sometimes a little..."
+    },
+    {
+      "name": "Fotos de Madrid",
+      "lat": 40.41672790000001,
+      "lng": -3.7032905,
+      "year": 2014,
+      "country": "Spain",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/06/fotos-de-madrid.html",
+      "desc": "Spent an amazing time in the capital of España - thanks to our good friends, MariaD & Jaime. Here are some photos........"
+    },
+    {
+      "name": "Trippin' for a day: Toledo",
+      "lat": 39.8628316,
+      "lng": -4.02732309999999,
+      "year": 2014,
+      "country": "Spain",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/06/trippin-for-day-toledo.html",
+      "desc": "While we were staying in Madrid, with our wonderful friend MariaD, it was suggested to us by all the Madrileños (people..."
+    },
+    {
+      "name": "Tapas hopping in Madrid",
+      "lat": 40.42,
+      "lng": -3.7,
+      "year": 2014,
+      "country": "Spain",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/05/tapas-hopping-in-madrid.html",
+      "desc": "Our first day out in Madrid was awesome! After arriving by train from Granada, our friend, MariaD came to pick us up..."
+    },
+    {
+      "name": "Hola España! Our first stop - Granada",
+      "lat": 37.18,
+      "lng": -3.6,
+      "year": 2014,
+      "country": "Spain",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/05/hola-espana-our-first-stop-granada.html",
+      "desc": "Hola España! Our first stop - Granada !! Alhambra at night After Morocco, we took the ferry to Tarifa, Spain. There are..."
+    },
+    {
+      "name": "12 days in Morocco",
+      "lat": 31.17,
+      "lng": -7.13,
+      "year": 2014,
+      "country": "Morocco",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/05/12-days-in-morocco.html",
+      "desc": "So having wrapped up our 12 days in Morocco, here is the itinerary of our trip. We flew into Casablanca from Istanbul..."
+    },
+    {
+      "name": "Moroccan wedding",
+      "lat": 35.77,
+      "lng": -5.8,
+      "year": 2014,
+      "country": "Morocco",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/05/moroccan-wedding.html",
+      "desc": "As we were checking into our riad in Tangier, we were told that there will be a wedding outside the riad this..."
+    },
+    {
+      "name": "Blue City, Chefchaouen",
+      "lat": 35.168796,
+      "lng": -5.268364099999999,
+      "year": 2014,
+      "country": "Morocco",
+      "category": "Photos",
+      "url": "https://www.trippinforayear.com/2014/05/blue-city-chefchaouen.html",
+      "desc": "Chefchaouen - Blue City in Morocco...... Our original itinerary didn't include Chefchaouen but we were glad we stopped..."
+    },
+    {
+      "name": "My favorite shop in Chefchaouen - La Botica de la Abuela Aladdin",
+      "lat": 35.17,
+      "lng": -5.26,
+      "year": 2014,
+      "country": "Morocco",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/05/my-favorite-shop-in-chefchaouen-la.html",
+      "desc": "There are lots of cute souvenir shops in Morocco. Unfortunately, traveling around the world with a backpack means I..."
+    },
+    {
+      "name": "Two days in Fes, Morocco",
+      "lat": 34.0181246,
+      "lng": -5.0078451,
+      "year": 2014,
+      "country": "Morocco",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/05/photos-from-fes-morocco.html",
+      "desc": "Fes Tanneries Our third stop in Morocco was Fes. It's the third largest city in Morocco, apparently. It also has a..."
+    },
+    {
+      "name": "Our second stop in Morocco - Marrakesh",
+      "lat": 31.6225224,
+      "lng": -7.989825799999999,
+      "year": 2014,
+      "country": "Morocco",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/05/our-second-stop-in-morocco-marrakesh.html",
+      "desc": "A Day in the Medina We started the day with breakfast on the rooftop — a communal table shared with other guests. The..."
+    },
+    {
+      "name": "Casablanca to Marrakesh by train",
+      "lat": 33.57,
+      "lng": -7.59,
+      "year": 2014,
+      "country": "Morocco",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/05/casablanca-to-marrakesh-by-train.html",
+      "desc": "Where's Frody? So we took the train from Casablanca to Marrakesh - Train goes every two hours so we just showed up and..."
+    },
+    {
+      "name": "Our first time on the continent of Africa",
+      "lat": 33.57,
+      "lng": -7.59,
+      "year": 2014,
+      "country": "Morocco",
+      "category": "Home",
+      "url": "https://www.trippinforayear.com/2014/05/our-first-time-on-continent-of-africa.html",
+      "desc": "From Istanbul, we flew into Casablanca in Morocco. This was our first time visiting the African continent. We took the..."
+    },
+    {
+      "name": "Having fun @ Turkish Air Lounge",
+      "lat": 41.01,
+      "lng": 28.98,
+      "year": 2014,
+      "country": "Turkey",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/05/having-fun-turkish-air-lounge.html",
+      "desc": "We arrived back in Istanbul around 10:30pm (from Athens) and we had a flight out of Istanbul at 10am the next morning..."
+    },
+    {
+      "name": "A Day in Athens, Greece",
+      "lat": 37.9838096,
+      "lng": 23.7275388,
+      "year": 2014,
+      "country": "Greece",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/05/photos-from-athens-greece.html",
+      "desc": "We woke up around 8 AM and started the day with breakfast on our little balcony — such a peaceful way to begin the..."
+    },
+    {
+      "name": "A shaky start to our Athens visit",
+      "lat": 37.983917,
+      "lng": 23.729359899999963,
+      "year": 2014,
+      "country": "Greece",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/05/a-shaky-start-to-our-athens-visit.html",
+      "desc": "Moving from Santorini to Athens, we had (as usual) the choice of the faster, more expensive routes (fly or express..."
+    },
+    {
+      "name": "Sunsets, Sand & Santorini: A Picture-Perfect Getaway",
+      "lat": 36.3931562,
+      "lng": 25.4615092,
+      "year": 2014,
+      "country": "Greece",
+      "category": "Cats",
+      "url": "https://www.trippinforayear.com/2014/05/photos-from-santorini-greece.html",
+      "desc": "This was hard. I've taken a LOT of photos in Santorini... probably a few hundred. Though 30% were cat photos...10%..."
+    },
+    {
+      "name": "Blue Star Ferry to Santorini island",
+      "lat": 36.81,
+      "lng": 27.11,
+      "year": 2014,
+      "country": "Greece",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/05/blue-star-ferry-to-santorini-island.html",
+      "desc": "After a quick & fun stay at Kos island, we headed off to Santorini island in Greece. Not sure if there are other ferry..."
+    },
+    {
+      "name": "3 days in Kos Island",
+      "lat": 36.8915064,
+      "lng": 27.2877228,
+      "year": 2014,
+      "country": "Greece",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/05/photos-from-kos-greece.html",
+      "desc": "Day 1: Our first stop in Greece: Kos. Beautiful island... We rented bicycles for two days and cycled around the island!..."
+    },
+    {
+      "name": "Bodrum to Kos - trippin' on the ferry",
+      "lat": 36.8925871,
+      "lng": 27.28779259999999,
+      "year": 2014,
+      "country": "Turkey",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/05/bodrum-to-kos-trippin-on-ferry.html",
+      "desc": "It was time for us to leave Turkey (we'll be back!), and head over to Greece. Specifically, to Kos island. Our ferry..."
+    },
+    {
+      "name": "Cats in Istanbul..",
+      "lat": 41.01,
+      "lng": 28.98,
+      "year": 2014,
+      "country": "Turkey",
+      "category": "Cats",
+      "url": "https://www.trippinforayear.com/2014/05/cats-in-istanbul.html",
+      "desc": "Cats are everywhere in Turkey - in the parks, restaurants, cafes, bus ticket offices, mosques, churches, shops..."
+    },
+    {
+      "name": "A day trip to Bodrum TOWN",
+      "lat": 37.034407,
+      "lng": 27.43054,
+      "year": 2014,
+      "country": "Turkey",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/05/a-day-trip-to-bodrum-town.html",
+      "desc": "On our third day in Güvercinlik, we finally followed through on our original plan: a day trip to Bodrum. This charming..."
+    },
+    {
+      "name": "South of Turkey - Bodrum",
+      "lat": 37.034407,
+      "lng": 27.43054,
+      "year": 2014,
+      "country": "Turkey",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/05/south-of-turkey-bodrum.html",
+      "desc": "As we decided not to fly to Greece, we took the bus to Bodrum . Our plan was to stay at the port town of Bodrum for a..."
+    },
+    {
+      "name": "Bus trippin' in Turkey: Istanbul to Bodrum",
+      "lat": 37.035339,
+      "lng": 27.430290000000014,
+      "year": 2014,
+      "country": "Turkey",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/05/bus-trippin-in-turkey-istanbul-to-bodrum.html",
+      "desc": "Once again, it was time to head off on an overnight bus. Yup, we're in Turkey!! We had researched the Turkish domestic..."
+    },
+    {
+      "name": "Photos from Istanbul",
+      "lat": 41.01,
+      "lng": 28.98,
+      "year": 2014,
+      "country": "Turkey",
+      "category": "Photos",
+      "url": "https://www.trippinforayear.com/2014/04/photos-from-istanbul.html",
+      "desc": "Bosphorus Bridge in Istanbul connecting two continents - Asia & Europe"
+    },
+    {
+      "name": "Turkish Sweets...",
+      "lat": 41.01,
+      "lng": 28.98,
+      "year": 2014,
+      "country": "Turkey",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/04/turkish-sweets.html",
+      "desc": "Turkish Sweets We didn't know this but Istanbul is full of bakeries and cafes that serve yummy sweets, from cakes..."
+    },
+    {
+      "name": "Turkish Haircut",
+      "lat": 41.00527,
+      "lng": 28.976959999999963,
+      "year": 2014,
+      "country": "Turkey",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/04/turkish-haircut.html",
+      "desc": "So after travelling through some of Thailand, all of India and Nepal, it was time to get a hair cut again, here in..."
+    },
+    {
+      "name": "Tips for traveling safe in India",
+      "lat": 20.59,
+      "lng": 78.96,
+      "year": 2014,
+      "country": "India",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/04/tips-for-traveling-safe-in-india.html",
+      "desc": "We've finished our 1.5 months India trip. We've done a lot but it went really fast now that we are looking back. We are..."
+    },
+    {
+      "name": "Goa photos",
+      "lat": 15.5,
+      "lng": 73.83,
+      "year": 2014,
+      "country": "India",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/04/goa-photos.html",
+      "desc": ".....finally we were on the beach (again). Goa is very different from all other states we've visited in India. For one..."
+    },
+    {
+      "name": "Final train trip in India: Mumbai to Goa",
+      "lat": 15.2993265,
+      "lng": 74.12399600000003,
+      "year": 2014,
+      "country": "India",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/04/final-train-trip-in-india-mumbai-to-goa.html",
+      "desc": "We've taken our last train trip in India - yet another long, loooong trip, but we're happy that it's the last one we've..."
+    },
+    {
+      "name": "Explored the city of Mumbai",
+      "lat": 19.08,
+      "lng": 72.88,
+      "year": 2014,
+      "country": "India",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/04/mumbai-photos.html",
+      "desc": "People sleeping on the platform of CST station Explored the city of Mumbai: visited Dharavi Slum - supposedly one of..."
+    },
+    {
+      "name": "Photos from Jaipur, the Pink City of India",
+      "lat": 26.91,
+      "lng": 75.79,
+      "year": 2014,
+      "country": "India",
+      "category": "Photos",
+      "url": "https://www.trippinforayear.com/2014/04/photos-from-jaipur-pink-city-of-india.html",
+      "desc": "Photos from Jaipur, the capital city of Rajasthan - delayed in uploading as my laptop broke while in Jaipur!!! :-( We..."
+    },
+    {
+      "name": "Taj Mahal, Agra Fort & Fatehpur Sikri",
+      "lat": 27.18,
+      "lng": 78.01,
+      "year": 2014,
+      "country": "India",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/04/taj-mahal-agra-fort-fatehpur-sikri.html",
+      "desc": "We finally got to see Taj Mahal!!! It was very beautiful. Agra Fort was impressive. Fatehpur Sikri was..."
+    },
+    {
+      "name": "Fun with Vodafone India",
+      "lat": 20.593684,
+      "lng": 78.96288000000004,
+      "year": 2014,
+      "country": "India",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/04/fun-with-vodafone-india.html",
+      "desc": "This is the only logo in this post.. One of the things we've decided to do in countries where we'll spend a bit of..."
+    },
+    {
+      "name": "Varanasi - A walk along the ghats",
+      "lat": 25.3176452,
+      "lng": 82.97391440000001,
+      "year": 2014,
+      "country": "India",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/04/varanasi-walk-along-ghats.html",
+      "desc": "We didn't get up for sunrise, so we did our tour of the Varanasi ghats in the full, blazing heat of the day. We may not..."
+    },
+    {
+      "name": "Pokhara to Varanasi - Border crossing from Nepal to India",
+      "lat": 25.3176452,
+      "lng": 82.97391440000001,
+      "year": 2014,
+      "country": "India",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/04/pokhara-to-varanasi-border-crossing.html",
+      "desc": "The time had come to leave the peaceful city of Pokhara, and return to noisy, busy India. We had decided against..."
+    },
+    {
+      "name": "Pokhara photos",
+      "lat": 28.21,
+      "lng": 83.99,
+      "year": 2014,
+      "country": "Nepal",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/04/pokhara-photos.html",
+      "desc": "Beautiful Phewa Lake in Pokhara, Nepal One week in Pokhara was very nice and relaxing. We are going to be heading back..."
+    },
+    {
+      "name": "Kathmandu photos",
+      "lat": 27.72,
+      "lng": 85.32,
+      "year": 2014,
+      "country": "Nepal",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/03/kathmandu-photos.html",
+      "desc": "Photos from a very dusty but extremely interesting city - Kathmandu. \\"
+    },
+    {
+      "name": "Kathmandu to Pokhara",
+      "lat": 28.20756794013708,
+      "lng": 83.96255242798361,
+      "year": 2014,
+      "country": "Nepal",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/03/kathmandu-to-pokhara.html",
+      "desc": "After spending time in the very interesting Kathmandu, it was time to head to another area of Nepal, the lakeside city..."
+    },
+    {
+      "name": "Overland border crossing from India to Nepal.....",
+      "lat": 28.39,
+      "lng": 84.12,
+      "year": 2014,
+      "country": "Nepal",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/03/overland-border-crossing-from-india-to.html",
+      "desc": "After Darjeeling , we decided to go west and cross border to Nepal . We checked out from lovely Tibetan family home..."
+    },
+    {
+      "name": "Photos from Darjeeling",
+      "lat": 27.04,
+      "lng": 88.27,
+      "year": 2014,
+      "country": "India",
+      "category": "Photos",
+      "url": "https://www.trippinforayear.com/2014/03/photos-from-darjeeling.html",
+      "desc": ""
+    },
+    {
+      "name": "Darjeeling Mail",
+      "lat": 27.04,
+      "lng": 88.27,
+      "year": 2014,
+      "country": "India",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/03/darjeeling-mail.html",
+      "desc": "Our first train experience in India was…. A lot easier & cleaner & more comfortable than I expected. We took the..."
+    },
+    {
+      "name": "Train travel in India - Kolkata to Darjeeling",
+      "lat": 27.04,
+      "lng": 88.27,
+      "year": 2014,
+      "country": "India",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/03/train-travel-in-india-kolkata-to.html",
+      "desc": "We decided our next destination: Darjeeling. Mainly because we want some tea... or was it because we've seen the movie..."
+    },
+    {
+      "name": "Kolkata photos...",
+      "lat": 22.57,
+      "lng": 88.36,
+      "year": 2014,
+      "country": "India",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/03/kolkata-photos.html",
+      "desc": "We arrived during Holi - festival of colours! Namaste. This was our first time in India. Our first stop was Kolkata..."
+    },
+    {
+      "name": "12 hours of fun at Suvarnabhumi Airport",
+      "lat": 13.76,
+      "lng": 100.5,
+      "year": 2014,
+      "country": "Thailand",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/03/12-hours-of-fun-at-suvarnabhumi-airport.html",
+      "desc": "We arrived in Bangkok at 7:00 in the morning. Our flight to Kolkata was not due till 11:30 in the evening. After 15..."
+    },
+    {
+      "name": "Sleeping our way to Bangkok",
+      "lat": 13.6924199,
+      "lng": 100.75089149999997,
+      "year": 2014,
+      "country": "Thailand",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/03/sleeping-our-way-to-bangkok.html",
+      "desc": "Our time in Chiang Mai and the north of Thailand has come to an end, and we needed to make our way back to Bangkok...."
+    },
+    {
+      "name": "Our last stop in Thailand: Chiang Mai!",
+      "lat": 18.79,
+      "lng": 98.98,
+      "year": 2014,
+      "country": "Thailand",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/03/our-last-stop-in-thailand-chiang-mai.html",
+      "desc": "So our long stay in Thailand is coming to an end. In total we were in Thailand for almost 2 months (2 weeks of Myanmar..."
+    },
+    {
+      "name": "Chiang Rai Photos",
+      "lat": 19.91,
+      "lng": 99.84,
+      "year": 2014,
+      "country": "Thailand",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/03/chiang-rai-photos.html",
+      "desc": "Photos from Chiang Rai, Thailand: Clock tower, Wat Chet Yot, Chiang Rai market, Tried a new layout... it took me ages!..."
+    },
+    {
+      "name": "Visit to International Humanity Foundation (IHF) Orphanage",
+      "lat": 19.9071656,
+      "lng": 99.83095500000002,
+      "year": 2014,
+      "country": "Thailand",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/03/visits-to-international-humanity.html",
+      "desc": "IHF has a center in Chiang Rai, so we decided to visit them. IHF in Chiang Rai currently houses 11 children, age..."
+    },
+    {
+      "name": "Ban Lorcha - tribal village",
+      "lat": 19.9071656,
+      "lng": 99.83095500000002,
+      "year": 2014,
+      "country": "Thailand",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/03/ban-lorcha-tribal-village.html",
+      "desc": "So, after the disappointment that was the so-called tribal villages on the day tour we did here in Chiang Rai, we..."
+    },
+    {
+      "name": "Cat café",
+      "lat": 19.91,
+      "lng": 99.84,
+      "year": 2014,
+      "country": "Thailand",
+      "category": "Cats",
+      "url": "https://www.trippinforayear.com/2014/03/cat-cafe.html",
+      "desc": "Ohhhhh so cute!!!! We found this cafe by accident on our way to Ban Lorcha Village . This is now my favourite cafe in..."
+    },
+    {
+      "name": "Northern Thailand - Golden Triangle, 'Hill Tribe Villages' & Laos",
+      "lat": 19.91,
+      "lng": 99.84,
+      "year": 2014,
+      "country": "Thailand",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/03/northern-thailand-golden-triangle-hill.html",
+      "desc": "Day tour around Northern Thailand: Some Hill tribe villages, Baan Si Dum, Golden Triangle, Don Sao island in Laos, Mae..."
+    },
+    {
+      "name": "Haircut in Chiang Rai",
+      "lat": 19.9071656,
+      "lng": 99.83095500000002,
+      "year": 2014,
+      "country": "Thailand",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/03/haircut-in-chiang-rai.html",
+      "desc": "I was starting to look a bit shaggy, so it was time to find a hairdresser to trim the hedges.. Before We were walking..."
+    },
+    {
+      "name": "Sickness: over!",
+      "lat": 19.9071656,
+      "lng": 99.83095500000002,
+      "year": 2014,
+      "country": "Thailand",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/03/sickness-over.html",
+      "desc": "Just in case it's not been made clear: we are both back to normal now. :-) When we got to Bangkok, it was time to stock..."
+    },
+    {
+      "name": "Yet another looOOoooooOOOOooong distance bus",
+      "lat": 19.91,
+      "lng": 99.84,
+      "year": 2014,
+      "country": "Thailand",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/02/yet-another-loooooooooooooooong.html",
+      "desc": "This time we are heading North to Chiang Rai. We are going to spend the last couple of weeks in Thailand relaxing. But..."
+    },
+    {
+      "name": "Sickness - update!!",
+      "lat": 13.7278956,
+      "lng": 100.52412349999997,
+      "year": 2014,
+      "country": "Thailand",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/02/sickness-update.html",
+      "desc": "So as you know, I got a horrible bout of 'gastro', just before leaving Mandalay. Worst. Day. Ever. (At least on the..."
+    },
+    {
+      "name": "Thailand Pre-paid mobile",
+      "lat": 13.7278956,
+      "lng": 100.52412349999997,
+      "year": 2014,
+      "country": "Thailand",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/02/thailand-pre-paid-mobile.html",
+      "desc": "One of the things we needed to do on returning to Thailand from Myanmar, was to recharge our prepaid mobile phones...."
+    },
+    {
+      "name": "Exploring Myanmar",
+      "lat": 21.17,
+      "lng": 94.86,
+      "year": 2014,
+      "country": "Myanmar",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/02/exploring-myanmar.html",
+      "desc": "We are back in Bangkok now. After spending some time in Myanmar, Bangkok feels a lot more organized and cleaner than I..."
+    },
+    {
+      "name": "Inle Lake photos",
+      "lat": 20.55,
+      "lng": 96.92,
+      "year": 2014,
+      "country": "Myanmar",
+      "category": "Cats",
+      "url": "https://www.trippinforayear.com/2014/02/inle-lake-photos.html",
+      "desc": "Apart from getting food poisoning, Inle Lake was quite pretty.... Resort on the lake Bar on the lake Beautiful sunset..."
+    },
+    {
+      "name": "Sick as a dog..",
+      "lat": 20.5862914,
+      "lng": 96.91018059999999,
+      "year": 2014,
+      "country": "Myanmar",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/02/sick-as-dog.html",
+      "desc": "It had to happen eventually... Yesterday, I came down with a horrible case (though probably described as \"mild\", should..."
+    },
+    {
+      "name": "Photos from Amarapura, Inwa and Sagain...... (towns surrounding Mandalay)",
+      "lat": 21.99,
+      "lng": 96.09,
+      "year": 2014,
+      "country": "Myanmar",
+      "category": "Photos",
+      "url": "https://www.trippinforayear.com/2014/02/photos-from-amarapura-inwa-and-sagain.html",
+      "desc": "Amarapura - Mahagandhayon Monastery, where over 1500 monks live (with lots of cats). Lots of rice for lunch Trainee..."
+    },
+    {
+      "name": "Boogying down in Mandalay",
+      "lat": 21.975,
+      "lng": 96.08333330000005,
+      "year": 2014,
+      "country": "Myanmar",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/02/boogying-down-in-mandalay.html",
+      "desc": "So we arrived in Mandalay, the second biggest city in Myanmar on a bus, found a taxi (they find you, really) that..."
+    },
+    {
+      "name": "Mandalay Photos",
+      "lat": 21.99,
+      "lng": 96.09,
+      "year": 2014,
+      "country": "Myanmar",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/02/mandalay-photos.html",
+      "desc": "Shan Noodle Photos from Mandalay downtown & Mandalay Hills. Mandalay Railway Station Bananas Chinte Gyi Nakaung -..."
+    },
+    {
+      "name": "Bagan photos......",
+      "lat": 21.17,
+      "lng": 94.86,
+      "year": 2014,
+      "country": "Myanmar",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/02/bagan-photos.html",
+      "desc": "More photos from Bagan... Lovely place with lovely people. We loved it! Fresh coconut for $1 Horse drawn carriage for..."
+    },
+    {
+      "name": "Temples and Phayas in Bagan",
+      "lat": 21.17,
+      "lng": 94.86,
+      "year": 2014,
+      "country": "Myanmar",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/02/temples-and-phayas-in-bagan.html",
+      "desc": "We visited Nyaung Oo, Old Bagan & New Bagan.... After seeing about 5 temples and phayas, it became hard to tell one..."
+    },
+    {
+      "name": "Gaining karma..?",
+      "lat": 21.1902778,
+      "lng": 94.89472219999993,
+      "year": 2014,
+      "country": "Myanmar",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/02/gaining-karma.html",
+      "desc": "We were visiting the Shwezigon Paya (a big golden pagoda), when I spotted a fellow Earthling in distress. Some 'tard..."
+    },
+    {
+      "name": "Going, going, Yangon",
+      "lat": 16.8346372,
+      "lng": 96.16595589999997,
+      "year": 2014,
+      "country": "Myanmar",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/02/going-going-yangon.html",
+      "desc": "As you know , we left Koh Samui on an overnight bus, arrived in Bangkok in the wee hours, ate breakfast at the greasy..."
+    },
+    {
+      "name": "Yangon Photos",
+      "lat": 16.87,
+      "lng": 96.2,
+      "year": 2014,
+      "country": "Myanmar",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/02/yangonphotos.html",
+      "desc": "We stayed in Yangon for two days. Interesting city. Very friendly people. Just outside out hotel Train station Train..."
+    },
+    {
+      "name": "On the move again....",
+      "lat": 13.76,
+      "lng": 100.5,
+      "year": 2014,
+      "country": "Thailand",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/02/on-move-again.html",
+      "desc": "Now we are heading to Myanmar! We are both excited because neither of us have been to Myanmar yet, first time, woohoo!..."
+    },
+    {
+      "name": "Beautiful wedding on the beach",
+      "lat": 9.51,
+      "lng": 100.01,
+      "year": 2014,
+      "country": "Thailand",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/02/beautiful-wedding-on-beach.html",
+      "desc": "Congratulations to my good friend Sherry and her new husband Edward! We are so happy that we could join them to..."
+    },
+    {
+      "name": "Koh Tao Photos",
+      "lat": 10.09,
+      "lng": 99.84,
+      "year": 2014,
+      "country": "Thailand",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/02/koh-tao-photos.html",
+      "desc": ""
+    },
+    {
+      "name": "Beautiful beaches in Koh Tao",
+      "lat": 10.09,
+      "lng": 99.84,
+      "year": 2014,
+      "country": "Thailand",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/02/beautiful-beaches-in-koh-tao.html",
+      "desc": "12 days of Island life. We managed to visit most of the beaches on Koh Tao. Lovely beaches. Sai Ree Beach Chalok Baan..."
+    },
+    {
+      "name": "Mmmmm.....Shakes!",
+      "lat": 10.0956102,
+      "lng": 99.84039589999999,
+      "year": 2014,
+      "country": "Thailand",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/02/mmmmmshakes.html",
+      "desc": "The shakes at Aminjirah Resort were so good! We loved every single one of them! (yes, we tried every single one of..."
+    },
+    {
+      "name": "Scuba Refresher and \"Fun Dive\"",
+      "lat": 10.0956102,
+      "lng": 99.84039589999998,
+      "year": 2014,
+      "country": "Thailand",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/02/scuba-refresher-and-fun-dive.html",
+      "desc": "CMAS certification card (not mine, just off the net) So, staying at Koh Tao, where there are 52 scuba schools (one for..."
+    },
+    {
+      "name": "Island Life.....",
+      "lat": 10.0956102,
+      "lng": 99.84039589999999,
+      "year": 2014,
+      "country": "Thailand",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/02/island-life.html",
+      "desc": "Trying to read the screen in the sun...very hard Trying to update the blog, but the internet connection on the island..."
+    },
+    {
+      "name": "New Boganville?",
+      "lat": 10.0956102,
+      "lng": 99.84039589999998,
+      "year": 2014,
+      "country": "Thailand",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/02/new-boganville.html",
+      "desc": "So we're all familiar with the notion of the bogan and all the stereotypical personal traits that entails. Bogan HQ?..."
+    },
+    {
+      "name": "Why why why WHY??????????",
+      "lat": 10.09,
+      "lng": 99.84,
+      "year": 2014,
+      "country": "Thailand",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/01/why-why-why-why.html",
+      "desc": "The wines are so over priced in Thailand. Jacob's creek's chardonnay pinot noir costs 990 baht (over $30 USD or almost..."
+    },
+    {
+      "name": "Heading to an island",
+      "lat": 9.134194899999999,
+      "lng": 99.3334198,
+      "year": 2014,
+      "country": "Thailand",
+      "category": "Cats",
+      "url": "https://www.trippinforayear.com/2014/01/heading-to-island.html",
+      "desc": "After an interesting experience at Din Dang, we headed south for an island. But first, a quick stop at Surat Thani for..."
+    },
+    {
+      "name": "Pak Song photos....",
+      "lat": 9.723161100000002,
+      "lng": 98.7260927,
+      "year": 2014,
+      "country": "Thailand",
+      "category": "Cats",
+      "url": "https://www.trippinforayear.com/2014/01/pak-song-photos.html",
+      "desc": "Although it was a short stay, we had fun! Thai boy riding with us Thai host family's cat At the TCDF Eco-Logic Arriving..."
+    },
+    {
+      "name": "TCDF Eco-Logic and DinDang Natural Building",
+      "lat": 9.723161100000002,
+      "lng": 98.7260927,
+      "year": 2014,
+      "country": "Thailand",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/01/tcdf-eco-logic-and-dindang-natural.html",
+      "desc": "One of our big plans on this trip is to volunteer here and there. We had big plans to jump from one volunteer place to..."
+    },
+    {
+      "name": "Photos from Lang Suan.....",
+      "lat": 10.49,
+      "lng": 99.18,
+      "year": 2014,
+      "country": "Thailand",
+      "category": "Photos",
+      "url": "https://www.trippinforayear.com/2014/01/photos-from-lang-suan.html",
+      "desc": "Fun around Lang Suan.... Beach in Pak Nam Trying out the local restaurant Fried bananas at the market Local market..."
+    },
+    {
+      "name": "Exploring the Lang Suan area",
+      "lat": 9.94,
+      "lng": 99.07,
+      "year": 2014,
+      "country": "Thailand",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/01/exploring-lang-suan-area.html",
+      "desc": "After a nice relaxing day yesterday, where we did very little, we felt the need to look around a bit today. But there..."
+    },
+    {
+      "name": "Language barrier",
+      "lat": 9.959579631740695,
+      "lng": 99.15461256210938,
+      "year": 2014,
+      "country": "Thailand",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/01/language-barrier.html",
+      "desc": "As anyone who has travelled to a country where the official language differs from one's own have found, it can be a..."
+    },
+    {
+      "name": "Bangkok to Lang Suan on an \"Express Train\". . . .",
+      "lat": 13.76,
+      "lng": 100.5,
+      "year": 2014,
+      "country": "Thailand",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/01/bangkok-to-lang-suan-on-express-train.html",
+      "desc": "After 3 days in Bangkok, we took a night train to Lang Suan - No first class available on this train, only second..."
+    },
+    {
+      "name": "Bangkok photos....",
+      "lat": 13.76,
+      "lng": 100.5,
+      "year": 2014,
+      "country": "Thailand",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/01/bangkok-photos.html",
+      "desc": "Here are some photos from Bangkok..... First lunch in BKK Si Lom Green Garden Restaurant Catching up with Masa Dinner..."
+    },
+    {
+      "name": "Travel vaccines - Tick!",
+      "lat": 13.7563309,
+      "lng": 100.5017651,
+      "year": 2014,
+      "country": "Thailand",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/01/travel-vaccines-tick.html",
+      "desc": "Queen Saovabha Memorial Institute (QSMI) is where we went for our travel vaccines in Bangkok. As mentioned in our..."
+    },
+    {
+      "name": "Getting Myanmar visa",
+      "lat": 21.92,
+      "lng": 95.96,
+      "year": 2014,
+      "country": "Myanmar",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/01/getting-myanmar-visa.html",
+      "desc": "Myanmar embassy in Bangkok We decided to get our Myanmar visas in Bangkok. It was quite quick and painless. Waiting to..."
+    },
+    {
+      "name": "Checking out the backpacker central, Khao San Road.",
+      "lat": 13.76,
+      "lng": 100.5,
+      "year": 2014,
+      "country": "Thailand",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/01/checking-out-backpacker-central-khao.html",
+      "desc": "Khao San Road - packed with backpackers I am not going to be traveling like a backpacker. I will not stay at $3 dorm..."
+    },
+    {
+      "name": "Our first stop - BANGkok!!!!",
+      "lat": 13.76,
+      "lng": 100.5,
+      "year": 2014,
+      "country": "Thailand",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/01/our-first-stop-bangkok.html",
+      "desc": "So our first stop is Bangkok, Thailand. We are planning to stay in Thailand for about 2 months including 2~3 weeks..."
+    },
+    {
+      "name": "Getting pre-paid sim in Thailand",
+      "lat": 13.76,
+      "lng": 100.5,
+      "year": 2014,
+      "country": "Thailand",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/01/getting-pre-paid-sim-in-thailand.html",
+      "desc": "Immediately on arrival in Bangkok, we needed to hook back into communications - both internet and phone. Promises to..."
+    },
+    {
+      "name": "Flying with ANA - Tokyo to Bangkok",
+      "lat": 15.87,
+      "lng": 100.99,
+      "year": 2014,
+      "country": "Thailand",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/01/flying-with-ana-tokyo-to-bangkok.html",
+      "desc": "We love flying with ANA (All Nippon Airways). Their customer service is excellent and their food is good. So we had a..."
+    },
+    {
+      "name": "The biggest struggle so far .... deciding what to pack (by Naomi)",
+      "lat": 35.6764225,
+      "lng": 139.650027,
+      "year": 2014,
+      "country": "Japan",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/01/the-biggest-struggle-so-far-deciding.html",
+      "desc": "Step 1. dump everything I want to bring on my bed....and panic. Step 2. Not enough space?..buy more backpack One 40L..."
+    },
+    {
+      "name": "Completed Rabies shot, yay!",
+      "lat": 15.87,
+      "lng": 100.99,
+      "year": 2014,
+      "country": "Thailand",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/01/completed-rabies-shot-yay.html",
+      "desc": "We started our first Rabies shot on December 7th. The rabies shot is the only one we decided to do in Japan, since it..."
+    },
+    {
+      "name": "Preparation: Getting India Visa in Japan",
+      "lat": 35.6764225,
+      "lng": 139.650027,
+      "year": 2014,
+      "country": "India",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/01/preparation-getting-india-visa-in-japan.html",
+      "desc": "Getting India Visa in Japan Applying for India visa in Tokyo: 1. First, access the India visa site & complete online..."
+    },
+    {
+      "name": "One more week to go!",
+      "lat": 36.2,
+      "lng": 138.25,
+      "year": 2014,
+      "country": "Japan",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/01/one-more-week-to-go.html",
+      "desc": "Eurail pass has arrived today, woohoo!"
+    },
+    {
+      "name": "Round the world ticket (RTW)",
+      "lat": 35.6764225,
+      "lng": 139.650027,
+      "year": 2014,
+      "country": "Japan",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/01/round-world-ticket-rtw.html",
+      "desc": "For our round the world tickets, we mainly looked into two RTW: Star Alliance and One World . There is also Skyteam but..."
+    },
+    {
+      "name": "Preparation: EuRail pass",
+      "lat": 35.6764225,
+      "lng": 139.650027,
+      "year": 2014,
+      "country": "Japan",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/01/preparation-eurail-pass.html",
+      "desc": "One of the things we want to do on this trip is see lots of places in Europe. We could fly here and there, but what's..."
+    },
+    {
+      "name": "Trippin' for a year.....",
+      "lat": 36.2,
+      "lng": 138.25,
+      "year": 2014,
+      "country": "Japan",
+      "category": "Blog",
+      "url": "https://www.trippinforayear.com/2014/01/trippin-for-year.html",
+      "desc": "Happy New Year! It's 2014. This year, we've decided to take a year off and travel around the world. We wish you all a..."
+    }
+  ]
+;
+</script>
+<script>
+var map, markerLayer;
+
+function initMap() {
+  map = L.map('map', { zoomControl: true, worldCopyJump: true }).setView([20, 0], 2);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>'
+  }).addTo(map);
+  markerLayer = L.layerGroup().addTo(map);
+
+  var countrySelect = document.getElementById('countryFilter');
+  var countries = [...new Set(DATA.map(function(d) { return d.country; }))].sort();
+  countries.forEach(function(c) {
+    var opt = document.createElement('option');
+    opt.value = c;
+    opt.textContent = c;
+    countrySelect.appendChild(opt);
+  });
+
+  var yearSelect = document.getElementById('yearFilter');
+  var years = [...new Set(DATA.map(function(d) { return d.year; }))].sort();
+  years.forEach(function(y) {
+    var opt = document.createElement('option');
+    opt.value = y;
+    opt.textContent = y;
+    yearSelect.appendChild(opt);
+  });
+
+  renderMarkers();
+}
+
+function getFilters() {
+  return {
+    year: parseInt(document.getElementById('yearSlider').value, 10),
+    exactYear: document.getElementById('yearFilter').value,
+    country: document.getElementById('countryFilter').value,
+    category: document.getElementById('categoryFilter').value
+  };
+}
+
+function renderMarkers() {
+  markerLayer.clearLayers();
+  var filters = getFilters();
+  var yearActive = filters.year < 2025 || filters.exactYear !== 'all';
+  var colors = { Blog: '#e94560', Food: '#f39c12', Cats: '#9b59b6', Home: '#2ecc71', Photos: '#3498db' };
+  var count = 0;
+
+  DATA.forEach(function(item) {
+    if (filters.exactYear !== 'all') {
+      if (item.year !== parseInt(filters.exactYear, 10)) return;
+    } else if (filters.year < 2025 && item.year > filters.year) return;
+    if (filters.country !== 'all' && item.country !== filters.country) return;
+    if (filters.category !== 'all' && item.category !== filters.category) return;
+    count++;
+    var color = yearActive ? (colors[item.category] || '#e94560') : '#888';
+    var marker = L.circleMarker([item.lat, item.lng], {
+      radius: 7,
+      fillColor: color,
+      color: '#fff',
+      weight: 2,
+      opacity: 1,
+      fillOpacity: 0.85
+    });
+    marker.bindPopup(
+      '<div class="marker-popup"><h3>' + item.name + '</h3>' +
+      '<p><strong>Country:</strong> ' + item.country + ' &middot; <strong>Year:</strong> ' + item.year + '</p>' +
+      '<p><span class="category-tag">' + item.category + '</span></p>' +
+      '<p>' + item.desc + '</p>' +
+      '<a href="' + item.url + '" target="_blank">Read post &rarr;</a></div>'
+    );
+    markerLayer.addLayer(marker);
+  });
+
+  document.getElementById('resultCount').textContent = count + ' posts';
+}
+
+document.getElementById('yearSlider').addEventListener('input', function() {
+  document.getElementById('yearDisplay').textContent = this.value;
+  renderMarkers();
+});
+
+document.getElementById('yearFilter').addEventListener('change', renderMarkers);
+document.getElementById('countryFilter').addEventListener('change', renderMarkers);
+document.getElementById('categoryFilter').addEventListener('change', renderMarkers);
+
+document.getElementById('resetBtn').addEventListener('click', function() {
+  document.getElementById('yearSlider').value = 2025;
+  document.getElementById('yearDisplay').textContent = '2025';
+  document.getElementById('yearFilter').value = 'all';
+  document.getElementById('countryFilter').value = 'all';
+  document.getElementById('categoryFilter').value = 'all';
+  renderMarkers();
+});
+
+initMap();
+</script>
+</div>
+</body>
+</html>
