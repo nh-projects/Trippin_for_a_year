@@ -2834,9 +2834,11 @@ z-index:32
               </div>
             </div>
           </header>
-          <div style='height:100vh;'>
-            <iframe src='https://nh-projects.github.io/Trippin_for_a_year/world-map.html' style='width:100%;height:100%;border:none;' title='World Map'/>
-          </div>
+          <b:if cond='data:view.isHomepage'>
+            <div style='height:100vh;'>
+              <iframe src='https://nh-projects.github.io/Trippin_for_a_year/world-map.html' style='width:100%;height:100%;border:none;' title='World Map'/>
+            </div>
+          </b:if>
           <main class='centered-bottom' id='main' role='main' tabindex='-1'>
             <b:if cond='data:view.isMultipleItems'>
               <h2 class='main-heading'><data:messages.posts/></h2>
