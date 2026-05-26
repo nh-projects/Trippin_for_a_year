@@ -2433,27 +2433,6 @@ z-index:32
           </div>
         </b:includable>
         <b:includable id='post' var='post'>
-          <b:if cond='data:view.isSingleItem'>
-            <div class='post-sidebar'>
-              <b:if cond='data:widgets.Blog.first.allBylineItems.share and data:post.shareUrl'>
-                <div class='post-sidebar-item post-share-buttons'>
-                  <b:with value='data:widget.instanceId + &quot;-&quot; + (data:regionName ?: &quot;byline&quot;) + &quot;-&quot; + data:post.id' var='sharingId'>
-                    <b:include data='{                                                              sharingId: data:sharingId,                                                              originalUrl: data:post.url,                                                              shareUrl: data:post.shareUrl,                                                              platforms: data:blog.sharing.platforms,                                                            }' name='sharingButtons'/>
-                  </b:with>
-                </div>
-              </b:if>
-              <b:if cond='data:widgets.Blog.first.allBylineItems.labels and data:post.labels'>
-                <div class='post-sidebar-item post-sidebar-labels'>
-                  <div><data:messages.labels/></div>
-                  <ul>
-                    <b:loop index='i' values='data:post.labels' var='label'>
-                      <li><a expr:href='data:label.url' rel='tag'><data:label.name/></a></li>
-                    </b:loop>
-                  </ul>
-                </div>
-              </b:if>
-            </div>
-          </b:if>
           <div class='post'>
             <b:class cond='data:view.isMultipleItems and data:post.featuredImage' name='has-featured-image'/>
             <b:class cond='data:view.isMultipleItems and not data:post.featuredImage' name='no-featured-image'/>
