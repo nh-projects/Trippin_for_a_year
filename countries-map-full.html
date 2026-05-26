@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Countries Visited — Trippin' for a Year</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jvectormap/2.0.5/jquery-jvectormap.css">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #f7f7f7; color: #333; min-height: 100vh;
+}
+.header {
+  background: #fff; padding: 24px 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+}
+.header h1 { font-size: 20px; font-weight: 700; letter-spacing: 0.5px; font-family: 'EB Garamond', serif; text-transform: uppercase; }
+.header h1 span { color: #bf8b38; }
+.header .sub { font-size: 13px; color: #999; margin-top: 2px; }
+.header a { color: #bf8b38; text-decoration: none; font-size: 13px; font-weight: 600; }
+.header a:hover { text-decoration: underline; }
+.content { max-width: 1100px; margin: 0 auto; padding: 20px; }
+.stats-bar {
+  background: #fff; border-radius: 10px; padding: 20px 24px; margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06); display: flex; align-items: center; gap: 30px; flex-wrap: wrap;
+}
+.stat { text-align: center; }
+.stat .num { font-size: 28px; font-weight: 700; color: #bf8b38; }
+.stat .label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; color: #999; }
+.stat .sub-label { font-size: 10px; color: #bbb; margin-top: -2px; }
+.progress-wrap { flex: 1; min-width: 200px; }
+.progress-bg { height: 10px; background: #e8e8e8; border-radius: 5px; overflow: hidden; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, #bf8b38, #d4a85a); border-radius: 5px; transition: width 0.8s ease; }
+.progress-text { font-size: 12px; color: #999; margin-top: 6px; text-align: right; }
+.progress-text strong { color: #333; }
+#map-container { background: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+#map { height: 520px; }
+.loading {
+  display: flex; align-items: center; justify-content: center; height: 400px;
+  font-size: 16px; color: #999;
+}
+.loading::after {
+  content: ''; width: 24px; height: 24px; margin-left: 12px;
+  border: 3px solid #e0e0e0; border-top-color: #bf8b38; border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.country-list-wrap {
+  background: #fff; border-radius: 10px; margin-top: 20px; padding: 20px 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.country-list-wrap h3 { font-size: 14px; font-weight: 600; margin-bottom: 12px; color: #666; text-transform: uppercase; letter-spacing: 0.5px; }
+.country-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.country-tag {
+  display: inline-block; padding: 4px 10px; border-radius: 4px;
+  font-size: 12px; font-weight: 500; background: #f5f0e8; color: #333;
+  transition: background 0.2s;
+}
+.country-tag:hover { background: #bf8b38; color: #fff; }
+.country-tag.manual { background: #d4e8c2; }
+.country-tag.manual:hover { background: #bf8b38; color: #fff; }
+.manual-hint { font-size: 11px; color: #bbb; text-align: center; margin-top: 8px; }
+.manual-hint a { color: #bf8b38; cursor: pointer; text-decoration: none; }
+.manual-hint a:hover { text-decoration: underline; }
+.jvectormap-tip { font-family: 'Montserrat', sans-serif; font-size: 12px; padding: 6px 10px; border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1><span>Countries</span> Visited</h1>
+    <div class="sub">Trippin' for a Year</div>
+  </div>
+  <a href="https://www.trippinforayear.com/">&larr; Back to blog</a>
+</div>
+
+<div class="content">
+  <div class="stats-bar" id="stats-bar">
+    <div class="stat"><div class="num" id="visited-count">--</div><div class="label">Visited</div><div class="sub-label" id="auto-label"></div></div>
+    <div class="stat"><div class="num">195</div><div class="label">UN Countries</div></div>
+    <div class="stat"><div class="num" id="pct-display">--%</div><div class="label">of the world</div></div>
+    <div class="progress-wrap">
+      <div class="progress-bg"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+      <div class="progress-text"><strong id="progress-label">Loading...</strong></div>
+    </div>
+  </div>
+
+  <div id="map-container">
+    <div class="loading" id="loading">Loading map</div>
+    <div id="map" style="display:none"></div>
+  </div>
+
+  <div class="country-list-wrap">
+    <h3>Visited Countries</h3>
+    <div class="country-tags" id="country-tags"></div>
+    <div class="manual-hint">Click any country on the map to toggle it as visited &middot; <a onclick="resetManual()">Reset manual changes</a></div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jvectormap/2.0.5/jquery-jvectormap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jvectormap/2.0.5/jquery-jvectormap-world-mill.js"></script>
+
+<script>
+// === MANUAL OVERRIDE ===
+// Add 2-letter ISO codes for countries not detected from blog labels.
+// Example: "va" for Vatican City, "gb" for United Kingdom, "au" for Australia.
+var MANUAL_COUNTRIES = [];
+
+var CL = {
+  "argentina":"AR","austria":"AT","belgium":"BE","brazil":"BR",
+  "chile":"CL","china":"CN","cuba":"CU","czech republic":"CZ","czechia":"CZ",
+  "denmark":"DK","estonia":"EE","finland":"FI","france":"FR",
+  "germany":"DE","greece":"GR","hungary":"HU","india":"IN","italy":"IT",
+  "japan":"JP","laos":"LA","latvia":"LV","lithuania":"LT",
+  "malaysia":"MY","mexico":"MX","morocco":"MA","myanmar":"MM",
+  "nepal":"NP","netherlands":"NL","norway":"NO","panama":"PA",
+  "peru":"PE","poland":"PL","slovakia":"SK","south africa":"ZA",
+  "spain":"ES","sweden":"SE","switzerland":"CH","thailand":"TH",
+  "turkey":"TR","united arab emirates":"AE","uae":"AE",
+  "uruguay":"UY","usa":"US","united states":"US"
+};
+var CM = {
+  "bangkok":"TH","chiang mai":"TH","chiang rai":"TH","koh tao":"TH","koh samui":"TH",
+  "mumbai":"IN","delhi":"IN","kolkata":"IN","varanasi":"IN","jaipur":"IN","agra":"IN","goa":"IN",
+  "pokhara":"NP","kathmandu":"NP",
+  "yangon":"MM","mandalay":"MM","bagan":"MM",
+  "tokyo":"JP","osaka":"JP","kyoto":"JP","hiroshima":"JP",
+  "istanbul":"TR","bodrum":"TR",
+  "athens":"GR","santorini":"GR","kos":"GR",
+  "barcelona":"ES","madrid":"ES","granada":"ES",
+  "paris":"FR","versailles":"FR",
+  "rome":"IT","milan":"IT","venice":"IT","pompeii":"IT",
+  "brussels":"BE","bruges":"BE",
+  "amsterdam":"NL","berlin":"DE","bremen":"DE",
+  "prague":"CZ","bratislava":"SK","vienna":"AT","budapest":"HU","zurich":"CH",
+  "stockholm":"SE","gothenburg":"SE","copenhagen":"DK",
+  "oslo":"NO","stavanger":"NO","helsinki":"FI","turku":"FI",
+  "tallinn":"EE","riga":"LV","vilnius":"LT","warsaw":"PL","krakow":"PL",
+  "cape town":"ZA",
+  "sao paulo":"BR","bombinhas":"BR","florianopolis":"BR",
+  "buenos aires":"AR","mendoza":"AR",
+  "lima":"PE","cusco":"PE","arequipa":"PE","machu picchu":"PE",
+  "panama city":"PA","cancun":"MX","havana":"CU","varadero":"CU","trinidad":"CU",
+  "san francisco":"US","dubai":"AE",
+  "urumqi":"CN","kashgar":"CN","shanghai":"CN",
+  "kuala lumpur":"MY",
+  "casablanca":"MA","marrakesh":"MA","fes":"MA","tangier":"MA","chefchaouen":"MA"
+};
+var NM = {
+  "ar":"Argentina","at":"Austria","be":"Belgium","br":"Brazil",
+  "cl":"Chile","cn":"China","cu":"Cuba","cz":"Czech Republic",
+  "dk":"Denmark","ee":"Estonia","fi":"Finland","fr":"France",
+  "de":"Germany","gr":"Greece","hu":"Hungary","in":"India",
+  "it":"Italy","jp":"Japan","la":"Laos","lv":"Latvia",
+  "lt":"Lithuania","my":"Malaysia","mx":"Mexico","ma":"Morocco",
+  "mm":"Myanmar","np":"Nepal","nl":"Netherlands","no":"Norway",
+  "pa":"Panama","pe":"Peru","pl":"Poland","sk":"Slovakia",
+  "za":"South Africa","es":"Spain","se":"Sweden","ch":"Switzerland",
+  "th":"Thailand","tr":"Turkey","ae":"United Arab Emirates",
+  "uy":"Uruguay","us":"United States"
+};
+var TOTAL = 195;
+var autoCodes = {};
+var batchNum = 0;
+
+function fetchBatch(startIndex) {
+  batchNum++;
+  var cb = 'fmBatch' + batchNum;
+  var s = document.createElement('script');
+  s.src = 'https://www.trippinforayear.com/feeds/posts/default?alt=json-in-script&callback=' + cb + '&max-results=150&start-index=' + startIndex + '&_=' + Date.now();
+  window[cb] = function(data) {
+    if (data && data.feed) {
+      var total = parseInt(data.feed.openSearch$totalResults.$t, 10);
+      (data.feed.entry || []).forEach(function(e) {
+        if (e.category) {
+          e.category.forEach(function(c) {
+            var label = (c.term || '').trim().toLowerCase();
+            if (CL[label]) autoCodes[CL[label].toLowerCase()] = true;
+            if (CM[label]) autoCodes[CM[label].toLowerCase()] = true;
+          });
+        }
+      });
+      var curStart = parseInt(data.feed.openSearch$startIndex.$t, 10);
+      var nextStart = curStart + (data.feed.entry || []).length;
+      if ((data.feed.entry || []).length > 0 && nextStart <= total) {
+        fetchBatch(nextStart);
+      } else {
+        allDone();
+      }
+    } else {
+      allDone();
+    }
+    window[cb] = null;
+  };
+  document.head.appendChild(s);
+}
+
+function allDone() {
+  var combined = {};
+  Object.keys(autoCodes).forEach(function(c) { combined[c] = true; });
+  MANUAL_COUNTRIES.forEach(function(code) {
+    if (code) combined[code.toLowerCase().trim()] = true;
+  });
+  var saved = [];
+  try { saved = JSON.parse(localStorage.getItem('fmManual') || '[]'); } catch(e) {}
+  saved.forEach(function(code) {
+    if (code) combined[code.toLowerCase().trim()] = true;
+  });
+  window.visitedCodes = Object.keys(combined);
+  renderMap(window.visitedCodes);
+}
+
+function renderMap(visited) {
+  var count = visited.length;
+  var pct = (count / TOTAL * 100).toFixed(1);
+  var saved = [];
+  try { saved = JSON.parse(localStorage.getItem('fmManual') || '[]'); } catch(e) {}
+  var manualCount = saved.length;
+
+  document.getElementById('visited-count').textContent = count;
+  document.getElementById('pct-display').textContent = pct + '%';
+  document.getElementById('progress-label').innerHTML = count + ' / ' + TOTAL + ' countries (' + pct + '%)';
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('auto-label').textContent = manualCount > 0 ? (count - manualCount) + ' auto + ' + manualCount + ' manual' : '';
+
+  var regionData = {};
+  visited.forEach(function(code) { regionData[code] = '#bf8b38'; });
+
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('map').style.display = 'block';
+
+  $('#map').vectorMap({
+    map: 'world_mill',
+    backgroundColor: '#f7f7f7',
+    zoomOnScroll: true,
+    zoomButtons: true,
+    regionStyle: {
+      initial: { fill: '#e0e0e0', 'fill-opacity': 1, stroke: '#fff', 'stroke-width': 0.5, 'stroke-opacity': 0.3 },
+      hover: { 'fill-opacity': 0.8, cursor: 'pointer' }
+    },
+    series: { regions: [{ values: regionData, attribute: 'fill' }] },
+    onRegionTipShow: function(e, el, code) {
+      var name = NM[code] || code.toUpperCase();
+      el.html(name + ' &mdash; ' + (regionData[code] ? '<span style="color:#bf8b38">Visited</span>' : 'Not yet'));
+    },
+    onRegionClick: function(e, code) {
+      e.preventDefault();
+      toggleCountry(code.toLowerCase());
+    }
+  });
+
+  var tagsEl = document.getElementById('country-tags');
+  tagsEl.innerHTML = '';
+  visited.map(function(c) { return { code: c, name: NM[c] || c.toUpperCase(), manual: saved.indexOf(c) >= 0 }; })
+    .sort(function(a, b) { return a.name.localeCompare(b.name); })
+    .forEach(function(item) {
+      var span = document.createElement('span');
+      span.className = 'country-tag' + (item.manual ? ' manual' : '');
+      span.textContent = item.name;
+      if (item.manual) span.title = 'Manually added';
+      tagsEl.appendChild(span);
+    });
+}
+
+function toggleCountry(code) {
+  if (!NM[code]) return;
+  var saved = [];
+  try { saved = JSON.parse(localStorage.getItem('fmManual') || '[]'); } catch(e) {}
+  var idx = saved.indexOf(code);
+  if (idx >= 0) {
+    saved.splice(idx, 1);
+  } else {
+    saved.push(code);
+  }
+  localStorage.setItem('fmManual', JSON.stringify(saved));
+
+  var combined = {};
+  Object.keys(autoCodes).forEach(function(c) { combined[c] = true; });
+  MANUAL_COUNTRIES.forEach(function(c) { if (c) combined[c.toLowerCase().trim()] = true; });
+  saved.forEach(function(c) { if (c) combined[c.toLowerCase().trim()] = true; });
+
+  window.visitedCodes = Object.keys(combined);
+  renderMap(window.visitedCodes);
+}
+
+function resetManual() {
+  localStorage.removeItem('fmManual');
+  location.reload();
+}
+
+fetchBatch(1);
+</script>
+</body>
+</html>
