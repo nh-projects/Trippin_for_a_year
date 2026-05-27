@@ -4,80 +4,67 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Countries Visited — Trippin' for a Year</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jvectormap@2.0.4/jquery-jvectormap.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f0f1a; color: #eee; }
-a { color: #bf8b38; text-decoration: none; }
-a:hover { text-decoration: underline; }
-
-/* Header */
-.header { text-align: center; padding: 24px 16px 8px; max-width: 1100px; margin: 0 auto; }
-.header h1 { font-family: 'EB Garamond', serif; font-size: 28px; font-weight: 400; text-transform: uppercase; letter-spacing: 1px; color: #fff; }
-.header .sub { font-size: 13px; color: rgba(255,255,255,0.5); margin-top: 4px; }
-.header .sub a { color: #bf8b38; }
-
-/* Summary bar */
-.summary { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; padding: 12px 16px 4px; max-width: 1100px; margin: 0 auto; }
+body { font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #000; }
+.back-link { text-align: center; padding: 6px 0 2px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+.back-link a { color: #bf8b38; text-decoration: none; }
+.back-link a:hover { text-decoration: underline; }
+.summary { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; padding: 4px 16px 0; max-width: 1100px; margin: 0 auto; }
 .summary .stat { font-size: 22px; font-weight: 700; color: #bf8b38; }
-.summary .stat-label { font-size: 12px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.5px; }
-.summary-bar-wrap { width: 100%; max-width: 400px; height: 8px; background: #2a2a3e; border-radius: 4px; overflow: hidden; }
-.summary-bar-fill { height: 100%; background: #bf8b38; border-radius: 4px; transition: width 0.5s ease; width: 0; }
-
-/* Map */
-.map-wrap { max-width: 1100px; margin: 12px auto 0; padding: 0 12px; }
-#map { width: 100%; height: 480px; border-radius: 8px; overflow: hidden; background: #1a1a2e; }
-.jvectormap-tip { font-family: 'Montserrat', sans-serif; font-size: 12px; padding: 6px 12px; border-radius: 4px; background: rgba(0,0,0,0.85); color: #fff; border: none; }
-.map-hint { text-align: center; font-size: 11px; color: rgba(255,255,255,0.35); padding: 6px 0 2px; }
-
-/* Search */
-.search-wrap { max-width: 1100px; margin: 16px auto 0; padding: 0 16px; }
-.search-wrap input { width: 100%; padding: 10px 14px; border: 1px solid #2a2a3e; border-radius: 6px; background: #1a1a2e; color: #eee; font-size: 14px; font-family: 'Montserrat', sans-serif; outline: none; }
+.summary .stat-label { font-size: 11px; color: rgba(0,0,0,0.5); text-transform: uppercase; letter-spacing: 0.5px; }
+.summary-bar-wrap { width: 100%; max-width: 400px; height: 6px; background: #e8e8e8; border-radius: 3px; overflow: hidden; }
+.summary-bar-fill { height: 100%; background: #bf8b38; border-radius: 3px; transition: width 0.5s ease; width: 0; }
+.map-wrap { max-width: 1100px; margin: 8px auto 0; padding: 0 12px; }
+#map { width: 100%; height: 480px; border-radius: 8px; overflow: hidden; border: 1px solid #e0e0e0; }
+.map-hint { text-align: center; font-size: 11px; color: rgba(0,0,0,0.35); padding: 6px 0 2px; }
+.search-wrap { max-width: 1100px; margin: 12px auto 0; padding: 0 16px; }
+.search-wrap input { width: 100%; padding: 10px 14px; border: 1px solid #d0d0d0; border-radius: 6px; background: #fff; color: #000; font-size: 14px; font-family: 'Montserrat', sans-serif; outline: none; }
 .search-wrap input:focus { border-color: #bf8b38; }
-.search-wrap input::placeholder { color: rgba(255,255,255,0.3); }
-
-/* Country list */
-.list-wrap { max-width: 1100px; margin: 8px auto 40px; padding: 0 16px; }
-.list-header { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; font-size: 12px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #2a2a3e; margin-bottom: 4px; }
-.country-row { display: flex; align-items: center; justify-content: space-between; padding: 6px 8px; border-bottom: 1px solid rgba(255,255,255,0.04); transition: background 0.15s; cursor: pointer; }
-.country-row:hover { background: rgba(255,255,255,0.04); }
-.country-row .name { font-size: 13px; color: #ccc; }
-.country-row .name .code { font-size: 10px; color: rgba(255,255,255,0.25); margin-left: 6px; }
-.toggle { display: inline-flex; align-items: center; gap: 5px; padding: 4px 12px; border-radius: 12px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; border: none; cursor: pointer; transition: all 0.2s; }
-.toggle.visited { background: #1b5e20; color: #a5d6a7; }
-.toggle.not-visited { background: #4a1a1a; color: #ef9a9a; }
-.toggle:hover { filter: brightness(1.2); }
-.toggle .dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
-.toggle.visited .dot { background: #66bb6a; }
-.toggle.not-visited .dot { background: #e57373; }
-
-/* Manual override section */
+.search-wrap input::placeholder { color: rgba(0,0,0,0.3); }
+.list-wrap { max-width: 1100px; margin: 4px auto 40px; padding: 0 16px; }
+.list-header { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; font-size: 11px; color: rgba(0,0,0,0.45); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e0e0e0; }
+.letter-group { border-bottom: 1px solid #f0f0f0; }
+.letter-header { display: flex; align-items: center; justify-content: space-between; padding: 8px 10px; cursor: pointer; user-select: none; transition: background 0.15s; }
+.letter-header:hover { background: #fafafa; }
+.letter-header .letter { font-size: 16px; font-weight: 700; color: #333; font-family: 'EB Garamond', serif; }
+.letter-header .letter-count { font-size: 11px; color: rgba(0,0,0,0.4); margin-left: 8px; }
+.letter-header .arrow { font-size: 12px; color: rgba(0,0,0,0.3); transition: transform 0.2s; }
+.letter-header.expanded .arrow { transform: rotate(90deg); }
+.letter-body { display: none; }
+.letter-body.open { display: block; }
+.country-row { display: flex; align-items: center; justify-content: space-between; padding: 5px 10px 5px 24px; border-bottom: 1px solid rgba(0,0,0,0.03); cursor: pointer; transition: background 0.12s; }
+.country-row:hover { background: #fafafa; }
+.country-row .name { font-size: 13px; color: #333; }
+.country-row .name .code { font-size: 10px; color: rgba(0,0,0,0.2); margin-left: 6px; }
+.toggle { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 10px; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; border: none; cursor: pointer; transition: all 0.2s; }
+.toggle.visited { background: #e8f5e9; color: #2e7d32; }
+.toggle.not-visited { background: #fce4ec; color: #c62828; }
+.toggle:hover { filter: brightness(0.95); }
+.toggle .dot { width: 5px; height: 5px; border-radius: 50%; display: inline-block; }
+.toggle.visited .dot { background: #4caf50; }
+.toggle.not-visited .dot { background: #ef5350; }
 .manual-section { max-width: 1100px; margin: 0 auto 30px; padding: 0 16px; }
-.manual-toggle { font-size: 11px; color: rgba(255,255,255,0.3); cursor: pointer; user-select: none; }
+.manual-toggle { font-size: 11px; color: rgba(0,0,0,0.3); cursor: pointer; user-select: none; }
 .manual-toggle:hover { color: #bf8b38; }
-.manual-code { display: none; margin-top: 8px; background: #1a1a2e; border: 1px solid #2a2a3e; border-radius: 6px; padding: 16px; font-family: 'SF Mono', 'Courier New', monospace; font-size: 12px; line-height: 1.6; color: #aaa; white-space: pre-wrap; overflow-x: auto; }
+.manual-code { display: none; margin-top: 8px; background: #f9f9f9; border: 1px solid #e0e0e0; border-radius: 6px; padding: 16px; font-family: 'SF Mono', 'Courier New', monospace; font-size: 12px; line-height: 1.6; color: #666; white-space: pre-wrap; overflow-x: auto; }
 .manual-code.show { display: block; }
-
-/* Scroll to top */
-.scroll-top { position: fixed; bottom: 20px; right: 20px; width: 40px; height: 40px; border-radius: 50%; background: #bf8b38; color: #fff; border: none; font-size: 18px; cursor: pointer; display: none; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.4); z-index: 100; }
+.scroll-top { position: fixed; bottom: 20px; right: 20px; width: 36px; height: 36px; border-radius: 50%; background: #bf8b38; color: #fff; border: none; font-size: 16px; cursor: pointer; display: none; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.15); z-index: 100; }
 .scroll-top.show { display: flex; }
-
-/* Responsive */
+.leaflet-tooltip { font-family: 'Montserrat', sans-serif; font-size: 12px; padding: 4px 10px; }
 @media (max-width: 600px) {
-  .header h1 { font-size: 20px; }
   #map { height: 300px; }
   .summary .stat { font-size: 18px; }
   .country-row .name { font-size: 12px; }
-  .toggle { font-size: 10px; padding: 3px 10px; }
+  .toggle { font-size: 9px; padding: 2px 8px; }
+  .letter-header .letter { font-size: 14px; }
 }
 </style>
 </head>
 <body>
 
-<div class="header">
-  <h1>Countries Visited</h1>
-  <div class="sub"><a href="https://www.trippinforayear.com/">Trippin' for a Year</a></div>
-</div>
+<div class="back-link"><a href="https://www.trippinforayear.com/">&larr; Trippin' for a Year</a></div>
 
 <div class="summary">
   <div><span class="stat" id="countDisplay">0</span> <span class="stat-label">/ 195 UN countries</span></div>
@@ -86,7 +73,7 @@ a:hover { text-decoration: underline; }
 </div>
 
 <div class="map-wrap">
-  <div id="map"><div class="jvectormap-loading" style="display:flex;align-items:center;justify-content:center;height:100%;color:#666;font-size:14px">Loading map...</div></div>
+  <div id="map"></div>
   <div class="map-hint">Click a country on the map to toggle visited / not visited</div>
 </div>
 
@@ -103,7 +90,7 @@ a:hover { text-decoration: underline; }
 </div>
 
 <div class="manual-section">
-  <div class="manual-toggle" onclick="toggleManualCode()">Show where to permanently save changes ⬎</div>
+  <div class="manual-toggle" onclick="toggleManualCode()">Show where to permanently save changes &#x2B53;</div>
   <div class="manual-code" id="manualCode">/* ===========================================
    MANUAL OVERRIDE — Permanently save countries
    ===========================================
@@ -111,12 +98,8 @@ a:hover { text-decoration: underline; }
    relying on localStorage), add its 2-letter ISO code
    to the MANUAL_COUNTRIES array below.
 
-   Then paste this entire array back into the Blogger
-   sidebar widget's MANUAL_COUNTRIES variable at the
-   top of the Countries Visited section.
-
-   Find it in Blogger → Layout → "Countries Visited"
-   HTML widget → look for:  var MANUAL_COUNTRIES = [];
+   Find it in Blogger &rarr; Layout &rarr; "Countries Visited"
+   HTML widget &rarr; look for:  var MANUAL_COUNTRIES = [];
 
    Example: to add United Kingdom and Australia:
      var MANUAL_COUNTRIES = ["va", "gb", "au"];
@@ -125,19 +108,14 @@ a:hover { text-decoration: underline; }
 var MANUAL_COUNTRIES = ["va"];</div>
 </div>
 
-<button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
+<button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">&uarr;</button>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jvectormap@2.0.4/jquery-jvectormap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jvectormap-maps-data@1.0.8/dist/maps/city/world/world_mill.js"></script>
-
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/topojson-client@3"></script>
 <script>
 // ===========================================
-// DETECTED COUNTRIES — auto-detected from blog labels/cities
+// DATA
 // ===========================================
-// These were extracted from the blog's country and city labels.
-// When you write about a new country, add its ISO code here
-// to mark it as visited on this tracker.
 var DETECTED_COUNTRIES = [
   "ar","at","be","br","cl","cn","cu","cz","dk","ee",
   "fi","fr","de","gr","hu","in","it","jp","la","lv",
@@ -145,19 +123,8 @@ var DETECTED_COUNTRIES = [
   "pl","sk","za","es","se","ch","th","tr","ae","uy","us"
 ];
 
-// ===========================================
-// MANUAL OVERRIDE
-// ===========================================
-// Add 2-letter ISO codes for countries not detected
-// from blog labels. This list is baked into the page
-// so it persists for all visitors.
-// Example: "va" for Vatican City, "gb" for United Kingdom.
 var MANUAL_COUNTRIES = ["va"];
 
-// ===========================================
-// ALL 195 UN COUNTRIES (193 members + 2 observers)
-// ===========================================
-// [iso_code, country_name] — sorted alphabetically by name
 var ALL_COUNTRIES = [
   ["af","Afghanistan"],["al","Albania"],["dz","Algeria"],["ad","Andorra"],
   ["ao","Angola"],["ag","Antigua and Barbuda"],["ar","Argentina"],
@@ -231,9 +198,45 @@ var ALL_COUNTRIES = [
 ];
 
 var TOTAL = 195;
-var mapObj = null;
 var visitedSet = {};
+var map = null;
+var geoLayer = null;
 
+// ISO 3166-1 numeric to alpha-2 mapping
+var NUM_TO_A2 = {
+  4:"af",8:"al",12:"dz",20:"ad",24:"ao",28:"ag",31:"az",32:"ar",
+  36:"au",40:"at",44:"bs",48:"bh",50:"bd",51:"am",52:"bb",56:"be",
+  64:"bt",68:"bo",70:"ba",72:"bw",76:"br",84:"bz",90:"sb",96:"bn",
+  100:"bg",104:"mm",108:"bi",112:"by",116:"kh",120:"cm",124:"ca",
+  132:"cv",140:"cf",144:"lk",148:"td",152:"cl",156:"cn",158:"tw",
+  170:"co",174:"km",178:"cg",180:"cd",188:"cr",191:"hr",192:"cu",
+  196:"cy",203:"cz",204:"bj",208:"dk",212:"dm",214:"do",218:"ec",
+  222:"sv",226:"gq",231:"et",232:"er",233:"ee",242:"fj",246:"fi",
+  250:"fr",262:"dj",266:"ga",268:"ge",270:"gm",275:"ps",276:"de",
+  288:"gh",296:"ki",300:"gr",308:"gd",320:"gt",324:"gn",328:"gy",
+  332:"ht",336:"va",340:"hn",348:"hu",352:"is",356:"in",360:"id",
+  364:"ir",368:"iq",372:"ie",376:"il",380:"it",384:"ci",388:"jm",
+  392:"jp",398:"kz",400:"jo",404:"ke",408:"kp",410:"kr",414:"kw",
+  417:"kg",418:"la",422:"lb",426:"ls",428:"lv",430:"lr",434:"ly",
+  438:"li",440:"lt",442:"lu",450:"mg",454:"mw",458:"my",462:"mv",
+  466:"ml",470:"mt",478:"mr",480:"mu",484:"mx",492:"mc",496:"mn",
+  498:"md",499:"me",504:"ma",508:"mz",512:"om",516:"na",520:"nr",
+  524:"np",528:"nl",540:"nc",548:"vu",554:"nz",558:"ni",562:"ne",
+  566:"ng",578:"no",583:"fm",584:"mh",585:"pw",586:"pk",591:"pa",
+  598:"pg",600:"py",604:"pe",608:"ph",616:"pl",620:"pt",624:"gw",
+  626:"tl",634:"qa",642:"ro",643:"ru",646:"rw",659:"kn",662:"lc",
+  670:"vc",674:"sm",678:"st",682:"sa",686:"sn",688:"rs",690:"sc",
+  694:"sl",702:"sg",703:"sk",704:"vn",705:"si",706:"so",710:"za",
+  716:"zw",724:"es",728:"ss",729:"sd",740:"sr",748:"sz",752:"se",
+  756:"ch",760:"sy",762:"tj",764:"th",768:"tg",772:"to",780:"tt",
+  784:"ae",788:"tn",792:"tr",795:"tm",798:"tv",800:"ug",804:"ua",
+  807:"mk",818:"eg",826:"gb",834:"tz",840:"us",854:"bf",858:"uy",
+  860:"uz",862:"ve",882:"ws",887:"ye",894:"zm"
+};
+
+// ===========================================
+// VISITED SET
+// ===========================================
 function getVisitedSet() {
   var s = {};
   DETECTED_COUNTRIES.forEach(function(c) { s[c] = true; });
@@ -259,49 +262,8 @@ function updateAll() {
   document.getElementById('countDisplay').textContent = count;
   document.getElementById('pctDisplay').textContent = pct;
   document.getElementById('barFill').style.width = pct + '%';
-  renderList();
-  updateMap();
-}
-
-function updateMap() {
-  if (!mapObj) return;
-  var values = {};
-  for (var code in visitedSet) {
-    values[code] = '#bf8b38';
-  }
-  try {
-    mapObj.series.regions[0].setValues(values);
-  } catch(e) {}
-}
-
-function renderList() {
-  var q = document.getElementById('searchInput').value.toLowerCase().trim();
-  var listEl = document.getElementById('countryList');
-  listEl.innerHTML = '';
-  var total = ALL_COUNTRIES.length;
-  var shown = 0;
-  var visitedCount = 0;
-  ALL_COUNTRIES.forEach(function(item) {
-    var code = item[0], name = item[1];
-    if (q && name.toLowerCase().indexOf(q) === -1 && code.indexOf(q) === -1) return;
-    shown++;
-    var isVisited = !!visitedSet[code];
-    if (isVisited) visitedCount++;
-    var row = document.createElement('div');
-    row.className = 'country-row';
-    row.innerHTML = '<span class="name">' + name + ' <span class="code">' + code.toUpperCase() + '</span></span>' +
-      '<button class="toggle ' + (isVisited ? 'visited' : 'not-visited') + '" data-code="' + code + '">' +
-      '<span class="dot"></span> ' + (isVisited ? 'Visited' : 'Not yet') + '</button>';
-    row.querySelector('.toggle').addEventListener('click', function(e) {
-      e.stopPropagation();
-      toggleCountry(code);
-    });
-    row.addEventListener('click', function() {
-      toggleCountry(code);
-    });
-    listEl.appendChild(row);
-  });
-  document.getElementById('listSummary').textContent = shown + ' / ' + total + ' countries shown \u00b7 ' + visitedCount + ' visited';
+  renderGroups();
+  updateMapColors();
 }
 
 function toggleCountry(code) {
@@ -309,56 +271,182 @@ function toggleCountry(code) {
   updateAll();
 }
 
+// ===========================================
+// MAP
+// ===========================================
 function initMap() {
-  var values = {};
-  for (var code in visitedSet) {
-    values[code] = '#bf8b38';
-  }
-  $('#map').vectorMap({
-    map: 'world_mill',
-    backgroundColor: '#1a1a2e',
-    zoomOnScroll: true,
-    zoomButtons: true,
-    regionStyle: {
-      initial: { fill: '#3a3a5c', 'fill-opacity': 1, stroke: '#2a2a4a', 'stroke-width': 0.5 },
-      hover: { 'fill-opacity': 0.7, cursor: 'pointer' }
-    },
-    series: { regions: [{ values: values, attribute: 'fill' }] },
-    onRegionTipShow: function(e, el, code) {
-      var name = code.toUpperCase();
-      for (var i = 0; i < ALL_COUNTRIES.length; i++) {
-        if (ALL_COUNTRIES[i][0] === code) { name = ALL_COUNTRIES[i][1]; break; }
-      }
-      var status = visitedSet[code] ? '<span style="color:#66bb6a">Visited</span>' : '<span style="color:#e57373">Not yet</span>';
-      $(el).html(name + ' \u2014 ' + status);
-    },
-    onRegionClick: function(e, code) {
-      e.preventDefault();
-      toggleCountry(code);
-    }
-  });
-  mapObj = $('#map').children('.jvectormap-container').data('mapObject');
+  map = L.map('map', { worldCopyJump: true, zoomControl: true }).setView([20, 0], 2);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>',
+    maxZoom: 19
+  }).addTo(map);
+
+  loadWorldData();
 }
 
-// Search
+function loadWorldData() {
+  var url = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json';
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', url, true);
+  xhr.responseType = 'json';
+  xhr.onload = function() {
+    if (xhr.status === 200) {
+      try {
+        var topology = xhr.response;
+        var features = topojson.feature(topology, topology.objects.countries);
+        if (features && features.features) {
+          geoLayer = L.geoJSON(features, {
+            style: countryStyle,
+            onEachFeature: function(feature, layer) {
+              var a2 = NUM_TO_A2[feature.id] || '';
+              var name = (feature.properties && feature.properties.name) || a2.toUpperCase();
+              layer.on('click', function() {
+                if (a2) toggleCountry(a2);
+              });
+              layer.bindTooltip(name, { sticky: true, direction: 'center' });
+            }
+          }).addTo(map);
+          updateMapColors();
+        }
+      } catch(e) {
+        console.error('Map data error:', e);
+      }
+    }
+  };
+  xhr.onerror = function() {
+    console.error('Failed to load world map data');
+  };
+  xhr.send();
+}
+
+function countryStyle(feature) {
+  var a2 = NUM_TO_A2[feature.id] || '';
+  var visited = a2 && !!visitedSet[a2];
+  return {
+    fillColor: visited ? '#bf8b38' : '#e0e0e0',
+    weight: 1,
+    opacity: 1,
+    color: '#ccc',
+    fillOpacity: visited ? 0.9 : 0.7
+  };
+}
+
+function updateMapColors() {
+  if (!geoLayer) return;
+  geoLayer.eachLayer(function(layer) {
+    if (layer.feature) {
+      var a2 = NUM_TO_A2[layer.feature.id] || '';
+      var visited = a2 && !!visitedSet[a2];
+      layer.setStyle({
+        fillColor: visited ? '#bf8b38' : '#e0e0e0',
+        fillOpacity: visited ? 0.9 : 0.7
+      });
+    }
+  });
+}
+
+// ===========================================
+// A-Z GROUPED LIST
+// ===========================================
+var letterGroups = {};
+
+function buildGroups() {
+  letterGroups = {};
+  ALL_COUNTRIES.forEach(function(item) {
+    var name = item[1];
+    var letter = name.charAt(0).toUpperCase();
+    if (!letterGroups[letter]) letterGroups[letter] = [];
+    letterGroups[letter].push(item);
+  });
+}
+
+function renderGroups() {
+  var q = document.getElementById('searchInput').value.toLowerCase().trim();
+  var listEl = document.getElementById('countryList');
+  listEl.innerHTML = '';
+  var total = ALL_COUNTRIES.length;
+  var visitedTotal = 0;
+  var hasSearch = q.length > 0;
+
+  var letters = Object.keys(letterGroups).sort();
+  letters.forEach(function(letter) {
+    var items = letterGroups[letter];
+    var matched = [];
+    items.forEach(function(item) {
+      var code = item[0], name = item[1];
+      if (hasSearch && name.toLowerCase().indexOf(q) === -1 && code.indexOf(q) === -1) return;
+      var isVisited = !!visitedSet[code];
+      if (isVisited) visitedTotal++;
+      matched.push({ code: code, name: name, visited: isVisited });
+    });
+    if (matched.length === 0) return;
+
+    var groupDiv = document.createElement('div');
+    groupDiv.className = 'letter-group';
+
+    var header = document.createElement('div');
+    header.className = 'letter-header' + (hasSearch ? ' expanded' : '');
+    header.innerHTML = '<span><span class="letter">' + letter + '</span><span class="letter-count">' +
+      matched.filter(function(m) { return m.visited; }).length + ' / ' + items.length +
+      '</span></span><span class="arrow">&#x25B8;</span>';
+    header.addEventListener('click', function() {
+      var body = groupDiv.querySelector('.letter-body');
+      var isOpen = body.classList.contains('open');
+      body.classList.toggle('open');
+      header.classList.toggle('expanded');
+    });
+
+    var body = document.createElement('div');
+    body.className = 'letter-body' + (hasSearch ? ' open' : '');
+
+    matched.forEach(function(m) {
+      var row = document.createElement('div');
+      row.className = 'country-row';
+      row.innerHTML = '<span class="name">' + m.name + ' <span class="code">' + m.code.toUpperCase() + '</span></span>' +
+        '<button class="toggle ' + (m.visited ? 'visited' : 'not-visited') + '">' +
+        '<span class="dot"></span> ' + (m.visited ? 'Visited' : 'Not yet') + '</button>';
+      row.querySelector('.toggle').addEventListener('click', function(e) {
+        e.stopPropagation();
+        toggleCountry(m.code);
+      });
+      row.addEventListener('click', function() {
+        toggleCountry(m.code);
+      });
+      body.appendChild(row);
+    });
+
+    groupDiv.appendChild(header);
+    groupDiv.appendChild(body);
+    listEl.appendChild(groupDiv);
+  });
+
+  document.getElementById('listSummary').textContent = total + ' countries \u00b7 ' + visitedTotal + ' visited';
+}
+
+// ===========================================
+// SEARCH, SCROLL, ETC
+// ===========================================
+var searchTimeout = null;
 document.getElementById('searchInput').addEventListener('input', function() {
-  renderList();
+  if (searchTimeout) clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(function() { renderGroups(); }, 150);
 });
 
-// Scroll to top button
 window.addEventListener('scroll', function() {
-  var btn = document.getElementById('scrollTop');
-  if (window.scrollY > 400) { btn.classList.add('show'); } else { btn.classList.remove('show'); }
+  document.getElementById('scrollTop').classList.toggle('show', window.scrollY > 400);
 });
 
 function toggleManualCode() {
   document.getElementById('manualCode').classList.toggle('show');
 }
 
-// Init
+// ===========================================
+// INIT
+// ===========================================
+buildGroups();
 visitedSet = getVisitedSet();
 updateAll();
-$(document).ready(function() { initMap(); });
+initMap();
 </script>
 
 </body>
