@@ -102,10 +102,10 @@ body { font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI',
    HTML widget &rarr; look for:  var MANUAL_COUNTRIES = [];
 
    Example: to add United Kingdom and Australia:
-     var MANUAL_COUNTRIES = ["va", "gb", "au"];
+      var MANUAL_COUNTRIES = ["va","au","ca","et","fj","id","jm","nz","ph","sg","kr","lk","gb","vn","kh","tw"];
    =========================================== */
 
-var MANUAL_COUNTRIES = ["va"];</div>
+var MANUAL_COUNTRIES = ["va","au","ca","et","fj","id","jm","nz","ph","sg","kr","lk","gb","vn","kh","tw"];</div>
 </div>
 
 <button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">&uarr;</button>
@@ -123,7 +123,7 @@ var DETECTED_COUNTRIES = [
   "pl","sk","za","es","se","ch","th","tr","ae","uy","us"
 ];
 
-var MANUAL_COUNTRIES = ["va"];
+var MANUAL_COUNTRIES = ["va","au","ca","et","fj","id","jm","nz","ph","sg","kr","lk","gb","vn","kh","tw"];
 
 var ALL_COUNTRIES = [
   ["af","Afghanistan"],["al","Albania"],["dz","Algeria"],["ad","Andorra"],
@@ -298,7 +298,7 @@ function loadWorldData() {
           geoLayer = L.geoJSON(features, {
             style: countryStyle,
             onEachFeature: function(feature, layer) {
-              var a2 = NUM_TO_A2[feature.id] || '';
+              var a2 = NUM_TO_A2[Number(feature.id)] || '';
               var name = (feature.properties && feature.properties.name) || a2.toUpperCase();
               layer.on('click', function() {
                 if (a2) toggleCountry(a2);
@@ -320,7 +320,7 @@ function loadWorldData() {
 }
 
 function countryStyle(feature) {
-  var a2 = NUM_TO_A2[feature.id] || '';
+  var a2 = NUM_TO_A2[Number(feature.id)] || '';
   var visited = a2 && !!visitedSet[a2];
   return {
     fillColor: visited ? '#bf8b38' : '#e0e0e0',
@@ -335,7 +335,7 @@ function updateMapColors() {
   if (!geoLayer) return;
   geoLayer.eachLayer(function(layer) {
     if (layer.feature) {
-      var a2 = NUM_TO_A2[layer.feature.id] || '';
+      var a2 = NUM_TO_A2[Number(layer.feature.id)] || '';
       var visited = a2 && !!visitedSet[a2];
       layer.setStyle({
         fillColor: visited ? '#bf8b38' : '#e0e0e0',
