@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Countries Visited — Trippin' for a Year</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jvectormap@2.0.4/jquery-jvectormap.css" />
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f0f1a; color: #eee; }
+a { color: #bf8b38; text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* Header */
+.header { text-align: center; padding: 24px 16px 8px; max-width: 1100px; margin: 0 auto; }
+.header h1 { font-family: 'EB Garamond', serif; font-size: 28px; font-weight: 400; text-transform: uppercase; letter-spacing: 1px; color: #fff; }
+.header .sub { font-size: 13px; color: rgba(255,255,255,0.5); margin-top: 4px; }
+.header .sub a { color: #bf8b38; }
+
+/* Summary bar */
+.summary { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; padding: 12px 16px 4px; max-width: 1100px; margin: 0 auto; }
+.summary .stat { font-size: 22px; font-weight: 700; color: #bf8b38; }
+.summary .stat-label { font-size: 12px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.5px; }
+.summary-bar-wrap { width: 100%; max-width: 400px; height: 8px; background: #2a2a3e; border-radius: 4px; overflow: hidden; }
+.summary-bar-fill { height: 100%; background: #bf8b38; border-radius: 4px; transition: width 0.5s ease; width: 0; }
+
+/* Map */
+.map-wrap { max-width: 1100px; margin: 12px auto 0; padding: 0 12px; }
+#map { width: 100%; height: 480px; border-radius: 8px; overflow: hidden; background: #1a1a2e; }
+.jvectormap-tip { font-family: 'Montserrat', sans-serif; font-size: 12px; padding: 6px 12px; border-radius: 4px; background: rgba(0,0,0,0.85); color: #fff; border: none; }
+.map-hint { text-align: center; font-size: 11px; color: rgba(255,255,255,0.35); padding: 6px 0 2px; }
+
+/* Search */
+.search-wrap { max-width: 1100px; margin: 16px auto 0; padding: 0 16px; }
+.search-wrap input { width: 100%; padding: 10px 14px; border: 1px solid #2a2a3e; border-radius: 6px; background: #1a1a2e; color: #eee; font-size: 14px; font-family: 'Montserrat', sans-serif; outline: none; }
+.search-wrap input:focus { border-color: #bf8b38; }
+.search-wrap input::placeholder { color: rgba(255,255,255,0.3); }
+
+/* Country list */
+.list-wrap { max-width: 1100px; margin: 8px auto 40px; padding: 0 16px; }
+.list-header { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; font-size: 12px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #2a2a3e; margin-bottom: 4px; }
+.country-row { display: flex; align-items: center; justify-content: space-between; padding: 6px 8px; border-bottom: 1px solid rgba(255,255,255,0.04); transition: background 0.15s; cursor: pointer; }
+.country-row:hover { background: rgba(255,255,255,0.04); }
+.country-row .name { font-size: 13px; color: #ccc; }
+.country-row .name .code { font-size: 10px; color: rgba(255,255,255,0.25); margin-left: 6px; }
+.toggle { display: inline-flex; align-items: center; gap: 5px; padding: 4px 12px; border-radius: 12px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; border: none; cursor: pointer; transition: all 0.2s; }
+.toggle.visited { background: #1b5e20; color: #a5d6a7; }
+.toggle.not-visited { background: #4a1a1a; color: #ef9a9a; }
+.toggle:hover { filter: brightness(1.2); }
+.toggle .dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
+.toggle.visited .dot { background: #66bb6a; }
+.toggle.not-visited .dot { background: #e57373; }
+
+/* Manual override section */
+.manual-section { max-width: 1100px; margin: 0 auto 30px; padding: 0 16px; }
+.manual-toggle { font-size: 11px; color: rgba(255,255,255,0.3); cursor: pointer; user-select: none; }
+.manual-toggle:hover { color: #bf8b38; }
+.manual-code { display: none; margin-top: 8px; background: #1a1a2e; border: 1px solid #2a2a3e; border-radius: 6px; padding: 16px; font-family: 'SF Mono', 'Courier New', monospace; font-size: 12px; line-height: 1.6; color: #aaa; white-space: pre-wrap; overflow-x: auto; }
+.manual-code.show { display: block; }
+
+/* Scroll to top */
+.scroll-top { position: fixed; bottom: 20px; right: 20px; width: 40px; height: 40px; border-radius: 50%; background: #bf8b38; color: #fff; border: none; font-size: 18px; cursor: pointer; display: none; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.4); z-index: 100; }
+.scroll-top.show { display: flex; }
+
+/* Responsive */
+@media (max-width: 600px) {
+  .header h1 { font-size: 20px; }
+  #map { height: 300px; }
+  .summary .stat { font-size: 18px; }
+  .country-row .name { font-size: 12px; }
+  .toggle { font-size: 10px; padding: 3px 10px; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Countries Visited</h1>
+  <div class="sub"><a href="https://www.trippinforayear.com/">Trippin' for a Year</a></div>
+</div>
+
+<div class="summary">
+  <div><span class="stat" id="countDisplay">0</span> <span class="stat-label">/ 195 UN countries</span></div>
+  <div><span class="stat" id="pctDisplay">0</span><span class="stat-label">%</span></div>
+  <div class="summary-bar-wrap"><div class="summary-bar-fill" id="barFill"></div></div>
+</div>
+
+<div class="map-wrap">
+  <div id="map"><div class="jvectormap-loading" style="display:flex;align-items:center;justify-content:center;height:100%;color:#666;font-size:14px">Loading map...</div></div>
+  <div class="map-hint">Click a country on the map to toggle visited / not visited</div>
+</div>
+
+<div class="search-wrap">
+  <input type="text" id="searchInput" placeholder="Search countries..." autocomplete="off">
+</div>
+
+<div class="list-wrap">
+  <div class="list-header">
+    <span id="listSummary">All 195 countries</span>
+    <span>Visited</span>
+  </div>
+  <div id="countryList"></div>
+</div>
+
+<div class="manual-section">
+  <div class="manual-toggle" onclick="toggleManualCode()">Show where to permanently save changes ⬎</div>
+  <div class="manual-code" id="manualCode">/* ===========================================
+   MANUAL OVERRIDE — Permanently save countries
+   ===========================================
+   To permanently mark a country as visited (without
+   relying on localStorage), add its 2-letter ISO code
+   to the MANUAL_COUNTRIES array below.
+
+   Then paste this entire array back into the Blogger
+   sidebar widget's MANUAL_COUNTRIES variable at the
+   top of the Countries Visited section.
+
+   Find it in Blogger → Layout → "Countries Visited"
+   HTML widget → look for:  var MANUAL_COUNTRIES = [];
+
+   Example: to add United Kingdom and Australia:
+     var MANUAL_COUNTRIES = ["va", "gb", "au"];
+   =========================================== */
+
+var MANUAL_COUNTRIES = ["va"];</div>
+</div>
+
+<button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jvectormap@2.0.4/jquery-jvectormap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jvectormap-maps-data@1.0.8/dist/maps/city/world/world_mill.js"></script>
+
+<script>
+// ===========================================
+// DETECTED COUNTRIES — auto-detected from blog labels/cities
+// ===========================================
+// These were extracted from the blog's country and city labels.
+// When you write about a new country, add its ISO code here
+// to mark it as visited on this tracker.
+var DETECTED_COUNTRIES = [
+  "ar","at","be","br","cl","cn","cu","cz","dk","ee",
+  "fi","fr","de","gr","hu","in","it","jp","la","lv",
+  "lt","my","mx","ma","mm","np","nl","no","pa","pe",
+  "pl","sk","za","es","se","ch","th","tr","ae","uy","us"
+];
+
+// ===========================================
+// MANUAL OVERRIDE
+// ===========================================
+// Add 2-letter ISO codes for countries not detected
+// from blog labels. This list is baked into the page
+// so it persists for all visitors.
+// Example: "va" for Vatican City, "gb" for United Kingdom.
+var MANUAL_COUNTRIES = ["va"];
+
+// ===========================================
+// ALL 195 UN COUNTRIES (193 members + 2 observers)
+// ===========================================
+// [iso_code, country_name] — sorted alphabetically by name
+var ALL_COUNTRIES = [
+  ["af","Afghanistan"],["al","Albania"],["dz","Algeria"],["ad","Andorra"],
+  ["ao","Angola"],["ag","Antigua and Barbuda"],["ar","Argentina"],
+  ["am","Armenia"],["au","Australia"],["at","Austria"],["az","Azerbaijan"],
+  ["bs","Bahamas"],["bh","Bahrain"],["bd","Bangladesh"],["bb","Barbados"],
+  ["by","Belarus"],["be","Belgium"],["bz","Belize"],["bj","Benin"],
+  ["bt","Bhutan"],["bo","Bolivia"],["ba","Bosnia and Herzegovina"],
+  ["bw","Botswana"],["br","Brazil"],["bn","Brunei"],["bg","Bulgaria"],
+  ["bf","Burkina Faso"],["bi","Burundi"],
+  ["cv","Cabo Verde"],["kh","Cambodia"],["cm","Cameroon"],["ca","Canada"],
+  ["cf","Central African Republic"],["td","Chad"],["cl","Chile"],
+  ["cn","China"],["co","Colombia"],["km","Comoros"],
+  ["cg","Congo"],["cd","Congo (DRC)"],["cr","Costa Rica"],
+  ["ci","C\u00f4te d'Ivoire"],["hr","Croatia"],["cu","Cuba"],
+  ["cy","Cyprus"],["cz","Czech Republic"],
+  ["dk","Denmark"],["dj","Djibouti"],["dm","Dominica"],
+  ["do","Dominican Republic"],
+  ["ec","Ecuador"],["eg","Egypt"],["sv","El Salvador"],
+  ["gq","Equatorial Guinea"],["er","Eritrea"],["ee","Estonia"],
+  ["sz","Eswatini"],["et","Ethiopia"],
+  ["fj","Fiji"],["fi","Finland"],["fr","France"],
+  ["ga","Gabon"],["gm","Gambia"],["ge","Georgia"],["de","Germany"],
+  ["gh","Ghana"],["gr","Greece"],["gd","Grenada"],["gt","Guatemala"],
+  ["gn","Guinea"],["gw","Guinea-Bissau"],["gy","Guyana"],
+  ["ht","Haiti"],["hn","Honduras"],["hu","Hungary"],
+  ["is","Iceland"],["in","India"],["id","Indonesia"],["ir","Iran"],
+  ["iq","Iraq"],["ie","Ireland"],["il","Israel"],["it","Italy"],
+  ["jm","Jamaica"],["jp","Japan"],["jo","Jordan"],
+  ["kz","Kazakhstan"],["ke","Kenya"],["ki","Kiribati"],
+  ["kw","Kuwait"],["kg","Kyrgyzstan"],
+  ["la","Laos"],["lv","Latvia"],["lb","Lebanon"],["ls","Lesotho"],
+  ["lr","Liberia"],["ly","Libya"],["li","Liechtenstein"],
+  ["lt","Lithuania"],["lu","Luxembourg"],
+  ["mg","Madagascar"],["mw","Malawi"],["my","Malaysia"],
+  ["mv","Maldives"],["ml","Mali"],["mt","Malta"],
+  ["mh","Marshall Islands"],["mr","Mauritania"],["mu","Mauritius"],
+  ["mx","Mexico"],["fm","Micronesia"],["md","Moldova"],
+  ["mc","Monaco"],["mn","Mongolia"],["me","Montenegro"],
+  ["ma","Morocco"],["mz","Mozambique"],["mm","Myanmar"],
+  ["na","Namibia"],["nr","Nauru"],["np","Nepal"],["nl","Netherlands"],
+  ["nz","New Zealand"],["ni","Nicaragua"],["ne","Niger"],
+  ["ng","Nigeria"],["kp","North Korea"],["mk","North Macedonia"],
+  ["no","Norway"],
+  ["om","Oman"],
+  ["pk","Pakistan"],["pw","Palau"],["ps","Palestine"],
+  ["pa","Panama"],["pg","Papua New Guinea"],["py","Paraguay"],
+  ["pe","Peru"],["ph","Philippines"],["pl","Poland"],["pt","Portugal"],
+  ["qa","Qatar"],
+  ["ro","Romania"],["ru","Russia"],["rw","Rwanda"],
+  ["kn","Saint Kitts and Nevis"],["lc","Saint Lucia"],
+  ["vc","Saint Vincent and the Grenadines"],["ws","Samoa"],
+  ["sm","San Marino"],["st","Sao Tome and Principe"],
+  ["sa","Saudi Arabia"],["sn","Senegal"],["rs","Serbia"],
+  ["sc","Seychelles"],["sl","Sierra Leone"],["sg","Singapore"],
+  ["sk","Slovakia"],["si","Slovenia"],["sb","Solomon Islands"],
+  ["so","Somalia"],["za","South Africa"],["kr","South Korea"],
+  ["ss","South Sudan"],["es","Spain"],["lk","Sri Lanka"],
+  ["sd","Sudan"],["sr","Suriname"],["se","Sweden"],["ch","Switzerland"],
+  ["sy","Syria"],
+  ["tj","Tajikistan"],["tz","Tanzania"],["th","Thailand"],
+  ["tl","Timor-Leste"],["tg","Togo"],["to","Tonga"],
+  ["tt","Trinidad and Tobago"],["tn","Tunisia"],["tr","Turkey"],
+  ["tm","Turkmenistan"],["tv","Tuvalu"],
+  ["ug","Uganda"],["ua","Ukraine"],
+  ["ae","United Arab Emirates"],["gb","United Kingdom"],
+  ["us","United States"],["uy","Uruguay"],["uz","Uzbekistan"],
+  ["vu","Vanuatu"],["va","Vatican City"],
+  ["ve","Venezuela"],["vn","Vietnam"],
+  ["ye","Yemen"],
+  ["zm","Zambia"],["zw","Zimbabwe"]
+];
+
+var TOTAL = 195;
+var mapObj = null;
+var visitedSet = {};
+
+function getVisitedSet() {
+  var s = {};
+  DETECTED_COUNTRIES.forEach(function(c) { s[c] = true; });
+  MANUAL_COUNTRIES.forEach(function(c) { if (c) s[c] = true; });
+  var saved = [];
+  try { saved = JSON.parse(localStorage.getItem('cwManual') || '[]'); } catch(e) {}
+  saved.forEach(function(c) { if (c) s[c] = true; });
+  return s;
+}
+
+function saveToggle(code) {
+  var saved = [];
+  try { saved = JSON.parse(localStorage.getItem('cwManual') || '[]'); } catch(e) {}
+  var idx = saved.indexOf(code);
+  if (idx >= 0) { saved.splice(idx, 1); } else { saved.push(code); }
+  localStorage.setItem('cwManual', JSON.stringify(saved));
+}
+
+function updateAll() {
+  visitedSet = getVisitedSet();
+  var count = Object.keys(visitedSet).length;
+  var pct = (count / TOTAL * 100).toFixed(1);
+  document.getElementById('countDisplay').textContent = count;
+  document.getElementById('pctDisplay').textContent = pct;
+  document.getElementById('barFill').style.width = pct + '%';
+  renderList();
+  updateMap();
+}
+
+function updateMap() {
+  if (!mapObj) return;
+  var values = {};
+  for (var code in visitedSet) {
+    values[code] = '#bf8b38';
+  }
+  try {
+    mapObj.series.regions[0].setValues(values);
+  } catch(e) {}
+}
+
+function renderList() {
+  var q = document.getElementById('searchInput').value.toLowerCase().trim();
+  var listEl = document.getElementById('countryList');
+  listEl.innerHTML = '';
+  var total = ALL_COUNTRIES.length;
+  var shown = 0;
+  var visitedCount = 0;
+  ALL_COUNTRIES.forEach(function(item) {
+    var code = item[0], name = item[1];
+    if (q && name.toLowerCase().indexOf(q) === -1 && code.indexOf(q) === -1) return;
+    shown++;
+    var isVisited = !!visitedSet[code];
+    if (isVisited) visitedCount++;
+    var row = document.createElement('div');
+    row.className = 'country-row';
+    row.innerHTML = '<span class="name">' + name + ' <span class="code">' + code.toUpperCase() + '</span></span>' +
+      '<button class="toggle ' + (isVisited ? 'visited' : 'not-visited') + '" data-code="' + code + '">' +
+      '<span class="dot"></span> ' + (isVisited ? 'Visited' : 'Not yet') + '</button>';
+    row.querySelector('.toggle').addEventListener('click', function(e) {
+      e.stopPropagation();
+      toggleCountry(code);
+    });
+    row.addEventListener('click', function() {
+      toggleCountry(code);
+    });
+    listEl.appendChild(row);
+  });
+  document.getElementById('listSummary').textContent = shown + ' / ' + total + ' countries shown \u00b7 ' + visitedCount + ' visited';
+}
+
+function toggleCountry(code) {
+  saveToggle(code);
+  updateAll();
+}
+
+function initMap() {
+  var values = {};
+  for (var code in visitedSet) {
+    values[code] = '#bf8b38';
+  }
+  $('#map').vectorMap({
+    map: 'world_mill',
+    backgroundColor: '#1a1a2e',
+    zoomOnScroll: true,
+    zoomButtons: true,
+    regionStyle: {
+      initial: { fill: '#3a3a5c', 'fill-opacity': 1, stroke: '#2a2a4a', 'stroke-width': 0.5 },
+      hover: { 'fill-opacity': 0.7, cursor: 'pointer' }
+    },
+    series: { regions: [{ values: values, attribute: 'fill' }] },
+    onRegionTipShow: function(e, el, code) {
+      var name = code.toUpperCase();
+      for (var i = 0; i < ALL_COUNTRIES.length; i++) {
+        if (ALL_COUNTRIES[i][0] === code) { name = ALL_COUNTRIES[i][1]; break; }
+      }
+      var status = visitedSet[code] ? '<span style="color:#66bb6a">Visited</span>' : '<span style="color:#e57373">Not yet</span>';
+      $(el).html(name + ' \u2014 ' + status);
+    },
+    onRegionClick: function(e, code) {
+      e.preventDefault();
+      toggleCountry(code);
+    }
+  });
+  mapObj = $('#map').children('.jvectormap-container').data('mapObject');
+}
+
+// Search
+document.getElementById('searchInput').addEventListener('input', function() {
+  renderList();
+});
+
+// Scroll to top button
+window.addEventListener('scroll', function() {
+  var btn = document.getElementById('scrollTop');
+  if (window.scrollY > 400) { btn.classList.add('show'); } else { btn.classList.remove('show'); }
+});
+
+function toggleManualCode() {
+  document.getElementById('manualCode').classList.toggle('show');
+}
+
+// Init
+visitedSet = getVisitedSet();
+updateAll();
+$(document).ready(function() { initMap(); });
+</script>
+
+</body>
+</html>
