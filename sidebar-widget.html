@@ -19,7 +19,7 @@
 <div class="cw-loading" id="cw-loading">Checking passports...</div>
 <div id="cw-content" style="display:none">
   <div class="cw-bar"><div class="cw-fill" id="cw-fill"></div></div>
-  <div class="cw-stats"><strong id="cw-count">0</strong> / 195 countries (<strong id="cw-pct">0</strong>%)</div>
+  <div class="cw-stats"><strong id="cw-count">0</strong> / 196 countries (<strong id="cw-pct">0</strong>%)</div>
   <div class="cw-link"><a href="/p/countries-tracker.html">View on World Map &raquo;</a></div>
 </div>
 </div>
@@ -77,14 +77,16 @@ var NM = {
   "pa":"Panama","pe":"Peru","pl":"Poland","sk":"Slovakia",
   "za":"South Africa","es":"Spain","se":"Sweden","ch":"Switzerland",
   "th":"Thailand","tr":"Turkey","ae":"United Arab Emirates",
-  "uy":"Uruguay","us":"United States","va":"Vatican City"
+  "uy":"Uruguay","us":"United States","va":"Vatican City",
+  "tw":"Taiwan"
 };
 // === MANUAL OVERRIDE ===
 // Add 2-letter ISO codes for countries not detected from blog labels.
 // Example: "va" for Vatican City, "gb" for United Kingdom, "au" for Australia.
 var MANUAL_COUNTRIES = ["va","au","ca","et","fj","id","jm","nz","ph","sg","kr","lk","gb","vn","kh","tw"];
 
-var TOTAL = 195;
+localStorage.removeItem('cwManual');
+var TOTAL = 196;
 var autoCodes = {};
 var batchNum = 0;
 
@@ -129,11 +131,6 @@ function allDone() {
   var combined = {};
   Object.keys(autoCodes).forEach(function(c) { combined[c] = true; });
   MANUAL_COUNTRIES.forEach(function(code) {
-    if (code) combined[code.toLowerCase().trim()] = true;
-  });
-  var saved = [];
-  try { saved = JSON.parse(localStorage.getItem('cwManual') || '[]'); } catch(e) {}
-  saved.forEach(function(code) {
     if (code) combined[code.toLowerCase().trim()] = true;
   });
   window.cwVisited = Object.keys(combined);
