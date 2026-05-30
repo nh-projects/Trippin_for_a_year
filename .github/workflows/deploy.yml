@@ -32,6 +32,9 @@ jobs:
       - name: Generate map
         run: python generate_map.py
 
+      - name: Generate pages
+        run: python generate_pages.py
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
