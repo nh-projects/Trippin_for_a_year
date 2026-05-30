@@ -1,6 +1,11 @@
-<!-- Countries Visited — paste into Blogger sidebar HTML widget -->
-<!-- Blogger → Layout → click edit on the "Countries Visited" HTML gadget → replace with this -->
+<!-- Countries Visited — embed in Blogger sidebar gadget via iframe -->
+<!-- Paste this in an HTML/JavaScript gadget:
+     <iframe src="https://nh-projects.github.io/Trippin_for_a_year/sidebar-widget.html"
+             style="border:none;width:100%;height:110px;overflow:hidden"
+             title="Countries Visited"></iframe>
+-->
 <style>
+body { margin: 0; }
 #cw-root { font-family: 'Montserrat', -apple-system, sans-serif; font-size: 12px; line-height: 1.6; }
 #cw-root .cw-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: rgba(0,0,0,0.54); margin-bottom: 8px; }
 #cw-root .cw-bar { height: 8px; background: #e8e8e8; border-radius: 4px; overflow: hidden; margin-bottom: 6px; }
@@ -20,7 +25,7 @@
 <div id="cw-content" style="display:none">
   <div class="cw-bar"><div class="cw-fill" id="cw-fill"></div></div>
   <div class="cw-stats"><strong id="cw-count">0</strong> / 196 countries (<strong id="cw-pct">0</strong>%)</div>
-  <div class="cw-link"><a href="/p/countries-tracker.html">View on World Map &raquo;</a></div>
+  <div class="cw-link"><a href="https://www.trippinforayear.com/p/countries-tracker.html" target="_blank" rel="noopener">View on World Map &raquo;</a></div>
 </div>
 </div>
 
