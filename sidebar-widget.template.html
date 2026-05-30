@@ -1,0 +1,102 @@
+<!-- Countries Visited — paste into Blogger sidebar HTML widget -->
+<!-- Blogger → Layout → click edit on the "Countries Visited" HTML gadget → replace with this -->
+<style>
+#cw-root { font-family: 'Montserrat', -apple-system, sans-serif; font-size: 12px; line-height: 1.6; }
+#cw-root .cw-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: rgba(0,0,0,0.54); margin-bottom: 8px; }
+#cw-root .cw-bar { height: 8px; background: #e8e8e8; border-radius: 4px; overflow: hidden; margin-bottom: 6px; }
+#cw-root .cw-fill { height: 100%; background: #bf8b38; border-radius: 4px; transition: width 0.8s ease; width: 0; }
+#cw-root .cw-stats { font-size: 11px; color: rgba(0,0,0,0.54); margin-bottom: 8px; }
+#cw-root .cw-stats strong { color: #333; font-weight: 700; }
+#cw-root .cw-link { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; }
+#cw-root .cw-link a { color: #bf8b38; text-decoration: none; }
+#cw-root .cw-link a:hover { text-decoration: underline; }
+#cw-root .cw-loading { font-size: 11px; color: rgba(0,0,0,0.54); padding: 4px 0; }
+#cw-root .cw-loading::after { content: ''; display: inline-block; width: 10px; height: 10px; margin-left: 6px; border: 2px solid #e0e0e0; border-top-color: #bf8b38; border-radius: 50%; animation: cwspin 0.7s linear infinite; vertical-align: middle; }
+@keyframes cwspin { to { transform: rotate(360deg); } }
+</style>
+
+<div id="cw-root">
+<div class="cw-loading" id="cw-loading">Checking passports...</div>
+<div id="cw-content" style="display:none">
+  <div class="cw-bar"><div class="cw-fill" id="cw-fill"></div></div>
+  <div class="cw-stats"><strong id="cw-count">0</strong> / /* TOTAL */ countries (<strong id="cw-pct">0</strong>%)</div>
+  <div class="cw-link"><a href="/p/countries-tracker.html">View on World Map &raquo;</a></div>
+</div>
+</div>
+
+<script>
+(function() {
+var CL = /* CL_DATA */;
+var CM = /* CM_DATA */;
+var NM = /* NM_DATA */;
+// === MANUAL OVERRIDE ===
+// Add 2-letter ISO codes for countries not detected from blog labels.
+// Example: "va" for Vatican City, "gb" for United Kingdom, "au" for Australia.
+var MANUAL_COUNTRIES = /* MANUAL_COUNTRIES */;
+
+localStorage.removeItem('cwManual');
+var TOTAL = /* TOTAL */;
+var autoCodes = {};
+var batchNum = 0;
+
+function fetchBatch(startIndex) {
+  batchNum++;
+  var cbName = 'cwBatch' + batchNum;
+  var script = document.createElement('script');
+  script.src = 'https://www.trippinforayear.com/feeds/posts/default?alt=json-in-script&callback=' + cbName + '&max-results=150&start-index=' + startIndex + '&_=' + Date.now();
+  window[cbName] = function(data) {
+    processBatch(data);
+    window[cbName] = null;
+  };
+  document.head.appendChild(script);
+}
+
+function processBatch(data) {
+  if (data && data.feed) {
+    var total = parseInt(data.feed.openSearch$totalResults.$t, 10);
+    var entries = data.feed.entry || [];
+    entries.forEach(function(e) {
+      if (e.category) {
+        e.category.forEach(function(c) {
+          var label = (c.term || '').trim().toLowerCase();
+          if (CL[label]) autoCodes[CL[label].toLowerCase()] = true;
+          if (CM[label]) autoCodes[CM[label].toLowerCase()] = true;
+        });
+      }
+    });
+    var curStart = parseInt(data.feed.openSearch$startIndex.$t, 10);
+    var nextStart = curStart + entries.length;
+    if (entries.length > 0 && nextStart <= total) {
+      fetchBatch(nextStart);
+    } else {
+      allDone();
+    }
+  } else {
+    allDone();
+  }
+}
+
+function allDone() {
+  var combined = {};
+  Object.keys(autoCodes).forEach(function(c) { combined[c] = true; });
+  MANUAL_COUNTRIES.forEach(function(code) {
+    if (code) combined[code.toLowerCase().trim()] = true;
+  });
+  window.cwVisited = Object.keys(combined);
+  renderSidebar(window.cwVisited);
+}
+
+fetchBatch(1);
+
+function renderSidebar(visited) {
+  var count = visited.length;
+  var pct = (count / TOTAL * 100).toFixed(1);
+  document.getElementById('cw-loading').style.display = 'none';
+  document.getElementById('cw-content').style.display = 'block';
+  document.getElementById('cw-count').textContent = count;
+  document.getElementById('cw-pct').textContent = pct;
+  document.getElementById('cw-fill').style.width = pct + '%';
+}
+})();
+</script>
+<!-- End Countries Visited widget -->

@@ -1,0 +1,2237 @@
+{
+  "country_to_code": {
+    "afghanistan": "af",
+    "albania": "al",
+    "algeria": "dz",
+    "andorra": "ad",
+    "angola": "ao",
+    "antigua and barbuda": "ag",
+    "argentina": "ar",
+    "armenia": "am",
+    "australia": "au",
+    "austria": "at",
+    "azerbaijan": "az",
+    "bahamas": "bs",
+    "bahrain": "bh",
+    "bangladesh": "bd",
+    "barbados": "bb",
+    "belarus": "by",
+    "belgium": "be",
+    "belize": "bz",
+    "benin": "bj",
+    "bhutan": "bt",
+    "bolivia": "bo",
+    "bosnia and herzegovina": "ba",
+    "botswana": "bw",
+    "brazil": "br",
+    "brunei": "bn",
+    "bulgaria": "bg",
+    "burkina faso": "bf",
+    "burundi": "bi",
+    "cabo verde": "cv",
+    "cambodia": "kh",
+    "cameroon": "cm",
+    "canada": "ca",
+    "cape verde": "cv",
+    "central african republic": "cf",
+    "chad": "td",
+    "chile": "cl",
+    "china": "cn",
+    "colombia": "co",
+    "comoros": "km",
+    "congo": "cg",
+    "congo (drc)": "cd",
+    "costa rica": "cr",
+    "croatia": "hr",
+    "cuba": "cu",
+    "cyprus": "cy",
+    "czech republic": "cz",
+    "czechia": "cz",
+    "côte d'ivoire": "ci",
+    "denmark": "dk",
+    "djibouti": "dj",
+    "dominica": "dm",
+    "dominican republic": "do",
+    "ecuador": "ec",
+    "egypt": "eg",
+    "el salvador": "sv",
+    "equatorial guinea": "gq",
+    "eritrea": "er",
+    "estonia": "ee",
+    "eswatini": "sz",
+    "ethiopia": "et",
+    "fiji": "fj",
+    "finland": "fi",
+    "france": "fr",
+    "gabon": "ga",
+    "gambia": "gm",
+    "georgia": "ge",
+    "germany": "de",
+    "ghana": "gh",
+    "greece": "gr",
+    "grenada": "gd",
+    "guatemala": "gt",
+    "guinea": "gn",
+    "guinea-bissau": "gw",
+    "guyana": "gy",
+    "haiti": "ht",
+    "honduras": "hn",
+    "hungary": "hu",
+    "iceland": "is",
+    "india": "in",
+    "indonesia": "id",
+    "iran": "ir",
+    "iraq": "iq",
+    "ireland": "ie",
+    "israel": "il",
+    "italy": "it",
+    "jamaica": "jm",
+    "japan": "jp",
+    "jordan": "jo",
+    "kazakhstan": "kz",
+    "kenya": "ke",
+    "kiribati": "ki",
+    "kuwait": "kw",
+    "kyrgyzstan": "kg",
+    "laos": "la",
+    "latvia": "lv",
+    "lebanon": "lb",
+    "lesotho": "ls",
+    "liberia": "lr",
+    "libya": "ly",
+    "liechtenstein": "li",
+    "lithuania": "lt",
+    "luxembourg": "lu",
+    "madagascar": "mg",
+    "malawi": "mw",
+    "malaysia": "my",
+    "maldives": "mv",
+    "mali": "ml",
+    "malta": "mt",
+    "marshall islands": "mh",
+    "mauritania": "mr",
+    "mauritius": "mu",
+    "mexico": "mx",
+    "micronesia": "fm",
+    "moldova": "md",
+    "monaco": "mc",
+    "mongolia": "mn",
+    "montenegro": "me",
+    "morocco": "ma",
+    "mozambique": "mz",
+    "myanmar": "mm",
+    "namibia": "na",
+    "nauru": "nr",
+    "nepal": "np",
+    "netherlands": "nl",
+    "new zealand": "nz",
+    "nicaragua": "ni",
+    "niger": "ne",
+    "nigeria": "ng",
+    "north korea": "kp",
+    "north macedonia": "mk",
+    "norway": "no",
+    "oman": "om",
+    "pakistan": "pk",
+    "palau": "pw",
+    "palestine": "ps",
+    "panama": "pa",
+    "papua new guinea": "pg",
+    "paraguay": "py",
+    "peru": "pe",
+    "philippines": "ph",
+    "poland": "pl",
+    "portugal": "pt",
+    "qatar": "qa",
+    "romania": "ro",
+    "russia": "ru",
+    "rwanda": "rw",
+    "saint kitts and nevis": "kn",
+    "saint lucia": "lc",
+    "saint vincent and the grenadines": "vc",
+    "samoa": "ws",
+    "san marino": "sm",
+    "sao tome and principe": "st",
+    "saudi arabia": "sa",
+    "senegal": "sn",
+    "serbia": "rs",
+    "seychelles": "sc",
+    "sierra leone": "sl",
+    "singapore": "sg",
+    "slovakia": "sk",
+    "slovenia": "si",
+    "solomon islands": "sb",
+    "somalia": "so",
+    "south africa": "za",
+    "south korea": "kr",
+    "south sudan": "ss",
+    "spain": "es",
+    "sri lanka": "lk",
+    "sudan": "sd",
+    "suriname": "sr",
+    "sweden": "se",
+    "switzerland": "ch",
+    "syria": "sy",
+    "taiwan": "tw",
+    "tajikistan": "tj",
+    "tanzania": "tz",
+    "thailand": "th",
+    "timor-leste": "tl",
+    "togo": "tg",
+    "tonga": "to",
+    "trinidad & tobago": "tt",
+    "trinidad and tobago": "tt",
+    "tunisia": "tn",
+    "turkey": "tr",
+    "turkmenistan": "tm",
+    "tuvalu": "tv",
+    "uae": "ae",
+    "uganda": "ug",
+    "uk": "gb",
+    "ukraine": "ua",
+    "united arab emirates": "ae",
+    "united kingdom": "gb",
+    "united states": "us",
+    "uruguay": "uy",
+    "usa": "us",
+    "uzbekistan": "uz",
+    "vanuatu": "vu",
+    "vatican city": "va",
+    "venezuela": "ve",
+    "vietnam": "vn",
+    "yemen": "ye",
+    "zambia": "zm",
+    "zimbabwe": "zw"
+  },
+  "city_to_code": {
+    "agra": "in",
+    "amalfi": "it",
+    "amsterdam": "nl",
+    "arequipa": "pe",
+    "athens": "gr",
+    "ayutthaya": "th",
+    "bagan": "mm",
+    "bangalore": "in",
+    "bangkok": "th",
+    "barcelona": "es",
+    "berlin": "de",
+    "bodrum": "tr",
+    "bombinhas": "br",
+    "bosa": "it",
+    "bratislava": "sk",
+    "bremen": "de",
+    "bruges": "be",
+    "brussels": "be",
+    "budapest": "hu",
+    "buenos aires": "ar",
+    "cagliari": "it",
+    "cancun": "mx",
+    "cape town": "za",
+    "casablanca": "ma",
+    "castelsardo": "it",
+    "chefchaouen": "ma",
+    "chiang mai": "th",
+    "chiang rai": "th",
+    "chumphon": "th",
+    "copenhagen": "dk",
+    "cusco": "pe",
+    "darjeeling": "in",
+    "delhi": "in",
+    "dubai": "ae",
+    "fes": "ma",
+    "florianopolis": "br",
+    "fukushima": "jp",
+    "goa": "in",
+    "gothenburg": "se",
+    "granada": "es",
+    "havana": "cu",
+    "helsinki": "fi",
+    "hiroshima": "jp",
+    "ica": "pe",
+    "inle lake": "mm",
+    "istanbul": "tr",
+    "jaipur": "in",
+    "kagawa": "jp",
+    "kashgar": "cn",
+    "kathmandu": "np",
+    "koh samui": "th",
+    "koh tao": "th",
+    "kolkata": "in",
+    "kos": "gr",
+    "krakow": "pl",
+    "kraków": "pl",
+    "kuala lumpur": "my",
+    "kyoto": "jp",
+    "lang suan": "th",
+    "lima": "pe",
+    "london": "gb",
+    "machu picchu": "pe",
+    "madrid": "es",
+    "mandalay": "mm",
+    "marrakesh": "ma",
+    "melbourne": "au",
+    "mendoza": "ar",
+    "milan": "it",
+    "mumbai": "in",
+    "niigata": "jp",
+    "okinawa": "jp",
+    "olbia": "it",
+    "osaka": "jp",
+    "oslo": "no",
+    "palau": "it",
+    "panama city": "pa",
+    "paris": "fr",
+    "pisa": "it",
+    "pokhara": "np",
+    "pompeii": "it",
+    "positano": "it",
+    "prague": "cz",
+    "riga": "lv",
+    "rome": "it",
+    "san francisco": "us",
+    "santorini": "gr",
+    "sao paulo": "br",
+    "shanghai": "cn",
+    "sorrento": "it",
+    "stavanger": "no",
+    "stockholm": "se",
+    "taketomi": "jp",
+    "tallinn": "ee",
+    "tangier": "ma",
+    "tashirojima": "jp",
+    "tokyo": "jp",
+    "toledo": "es",
+    "trinidad": "cu",
+    "turku": "fi",
+    "turpan": "cn",
+    "urumqi": "cn",
+    "varadero": "cu",
+    "varanasi": "in",
+    "venice": "it",
+    "versailles": "fr",
+    "vienna": "at",
+    "vilnius": "lt",
+    "warsaw": "pl",
+    "xinjiang": "cn",
+    "yangon": "mm",
+    "yushima": "jp",
+    "zurich": "ch"
+  },
+  "code_to_name": {
+    "ad": "Andorra",
+    "ae": "United Arab Emirates",
+    "af": "Afghanistan",
+    "ag": "Antigua and Barbuda",
+    "al": "Albania",
+    "am": "Armenia",
+    "ao": "Angola",
+    "ar": "Argentina",
+    "at": "Austria",
+    "au": "Australia",
+    "az": "Azerbaijan",
+    "ba": "Bosnia and Herzegovina",
+    "bb": "Barbados",
+    "bd": "Bangladesh",
+    "be": "Belgium",
+    "bf": "Burkina Faso",
+    "bg": "Bulgaria",
+    "bh": "Bahrain",
+    "bi": "Burundi",
+    "bj": "Benin",
+    "bn": "Brunei",
+    "bo": "Bolivia",
+    "br": "Brazil",
+    "bs": "Bahamas",
+    "bt": "Bhutan",
+    "bw": "Botswana",
+    "by": "Belarus",
+    "bz": "Belize",
+    "ca": "Canada",
+    "cd": "Congo (DRC)",
+    "cf": "Central African Republic",
+    "cg": "Congo",
+    "ch": "Switzerland",
+    "ci": "Côte d'Ivoire",
+    "cl": "Chile",
+    "cm": "Cameroon",
+    "cn": "China",
+    "co": "Colombia",
+    "cr": "Costa Rica",
+    "cu": "Cuba",
+    "cv": "Cabo Verde",
+    "cy": "Cyprus",
+    "cz": "Czech Republic",
+    "de": "Germany",
+    "dj": "Djibouti",
+    "dk": "Denmark",
+    "dm": "Dominica",
+    "do": "Dominican Republic",
+    "dz": "Algeria",
+    "ec": "Ecuador",
+    "ee": "Estonia",
+    "eg": "Egypt",
+    "er": "Eritrea",
+    "es": "Spain",
+    "et": "Ethiopia",
+    "fi": "Finland",
+    "fj": "Fiji",
+    "fm": "Micronesia",
+    "fr": "France",
+    "ga": "Gabon",
+    "gb": "United Kingdom",
+    "gd": "Grenada",
+    "ge": "Georgia",
+    "gh": "Ghana",
+    "gm": "Gambia",
+    "gn": "Guinea",
+    "gq": "Equatorial Guinea",
+    "gr": "Greece",
+    "gt": "Guatemala",
+    "gw": "Guinea-Bissau",
+    "gy": "Guyana",
+    "hn": "Honduras",
+    "hr": "Croatia",
+    "ht": "Haiti",
+    "hu": "Hungary",
+    "id": "Indonesia",
+    "ie": "Ireland",
+    "il": "Israel",
+    "in": "India",
+    "iq": "Iraq",
+    "ir": "Iran",
+    "is": "Iceland",
+    "it": "Italy",
+    "jm": "Jamaica",
+    "jo": "Jordan",
+    "jp": "Japan",
+    "ke": "Kenya",
+    "kg": "Kyrgyzstan",
+    "kh": "Cambodia",
+    "ki": "Kiribati",
+    "km": "Comoros",
+    "kn": "Saint Kitts and Nevis",
+    "kp": "North Korea",
+    "kr": "South Korea",
+    "kw": "Kuwait",
+    "kz": "Kazakhstan",
+    "la": "Laos",
+    "lb": "Lebanon",
+    "lc": "Saint Lucia",
+    "li": "Liechtenstein",
+    "lk": "Sri Lanka",
+    "lr": "Liberia",
+    "ls": "Lesotho",
+    "lt": "Lithuania",
+    "lu": "Luxembourg",
+    "lv": "Latvia",
+    "ly": "Libya",
+    "ma": "Morocco",
+    "mc": "Monaco",
+    "md": "Moldova",
+    "me": "Montenegro",
+    "mg": "Madagascar",
+    "mh": "Marshall Islands",
+    "mk": "North Macedonia",
+    "ml": "Mali",
+    "mm": "Myanmar",
+    "mn": "Mongolia",
+    "mr": "Mauritania",
+    "mt": "Malta",
+    "mu": "Mauritius",
+    "mv": "Maldives",
+    "mw": "Malawi",
+    "mx": "Mexico",
+    "my": "Malaysia",
+    "mz": "Mozambique",
+    "na": "Namibia",
+    "ne": "Niger",
+    "ng": "Nigeria",
+    "ni": "Nicaragua",
+    "nl": "Netherlands",
+    "no": "Norway",
+    "np": "Nepal",
+    "nr": "Nauru",
+    "nz": "New Zealand",
+    "om": "Oman",
+    "pa": "Panama",
+    "pe": "Peru",
+    "pg": "Papua New Guinea",
+    "ph": "Philippines",
+    "pk": "Pakistan",
+    "pl": "Poland",
+    "ps": "Palestine",
+    "pt": "Portugal",
+    "pw": "Palau",
+    "py": "Paraguay",
+    "qa": "Qatar",
+    "ro": "Romania",
+    "rs": "Serbia",
+    "ru": "Russia",
+    "rw": "Rwanda",
+    "sa": "Saudi Arabia",
+    "sb": "Solomon Islands",
+    "sc": "Seychelles",
+    "sd": "Sudan",
+    "se": "Sweden",
+    "sg": "Singapore",
+    "si": "Slovenia",
+    "sk": "Slovakia",
+    "sl": "Sierra Leone",
+    "sm": "San Marino",
+    "sn": "Senegal",
+    "so": "Somalia",
+    "sr": "Suriname",
+    "ss": "South Sudan",
+    "st": "Sao Tome and Principe",
+    "sv": "El Salvador",
+    "sy": "Syria",
+    "sz": "Eswatini",
+    "td": "Chad",
+    "tg": "Togo",
+    "th": "Thailand",
+    "tj": "Tajikistan",
+    "tl": "Timor-Leste",
+    "tm": "Turkmenistan",
+    "tn": "Tunisia",
+    "to": "Tonga",
+    "tr": "Turkey",
+    "tt": "Trinidad and Tobago",
+    "tv": "Tuvalu",
+    "tw": "Taiwan",
+    "tz": "Tanzania",
+    "ua": "Ukraine",
+    "ug": "Uganda",
+    "us": "United States",
+    "uy": "Uruguay",
+    "uz": "Uzbekistan",
+    "va": "Vatican City",
+    "vc": "Saint Vincent and the Grenadines",
+    "ve": "Venezuela",
+    "vn": "Vietnam",
+    "vu": "Vanuatu",
+    "ws": "Samoa",
+    "ye": "Yemen",
+    "za": "South Africa",
+    "zm": "Zambia",
+    "zw": "Zimbabwe"
+  },
+  "city_coords": {
+    "agra": [
+      27.18,
+      78.01
+    ],
+    "amalfi": [
+      40.63,
+      14.6
+    ],
+    "amsterdam": [
+      52.37,
+      4.89
+    ],
+    "arequipa": [
+      -16.4,
+      -71.54
+    ],
+    "athens": [
+      37.98,
+      23.73
+    ],
+    "ayutthaya": [
+      14.35,
+      100.58
+    ],
+    "bagan": [
+      21.17,
+      94.86
+    ],
+    "bangalore": [
+      12.97,
+      77.59
+    ],
+    "bangkok": [
+      13.76,
+      100.5
+    ],
+    "barcelona": [
+      41.39,
+      2.16
+    ],
+    "berlin": [
+      52.52,
+      13.4
+    ],
+    "bodrum": [
+      37.03,
+      27.43
+    ],
+    "bombinhas": [
+      -27.14,
+      -48.52
+    ],
+    "bosa": [
+      40.3,
+      8.51
+    ],
+    "bratislava": [
+      48.15,
+      17.11
+    ],
+    "bremen": [
+      53.08,
+      8.81
+    ],
+    "bruges": [
+      51.21,
+      3.22
+    ],
+    "brussels": [
+      50.85,
+      4.35
+    ],
+    "budapest": [
+      47.5,
+      19.04
+    ],
+    "buenos aires": [
+      -34.6,
+      -58.38
+    ],
+    "cagliari": [
+      39.22,
+      9.11
+    ],
+    "cancun": [
+      21.16,
+      -86.85
+    ],
+    "cape town": [
+      -33.93,
+      18.42
+    ],
+    "casablanca": [
+      33.57,
+      -7.59
+    ],
+    "castelsardo": [
+      40.91,
+      8.71
+    ],
+    "chefchaouen": [
+      35.17,
+      -5.26
+    ],
+    "chiang mai": [
+      18.79,
+      98.98
+    ],
+    "chiang rai": [
+      19.91,
+      99.84
+    ],
+    "chumphon": [
+      10.49,
+      99.18
+    ],
+    "copenhagen": [
+      55.68,
+      12.57
+    ],
+    "cusco": [
+      -13.53,
+      -71.97
+    ],
+    "darjeeling": [
+      27.04,
+      88.27
+    ],
+    "delhi": [
+      28.7,
+      77.1
+    ],
+    "dubai": [
+      25.2,
+      55.27
+    ],
+    "fes": [
+      34.04,
+      -5.0
+    ],
+    "florianopolis": [
+      -27.6,
+      -48.55
+    ],
+    "fukushima": [
+      37.76,
+      140.47
+    ],
+    "goa": [
+      15.5,
+      73.83
+    ],
+    "gothenburg": [
+      57.71,
+      11.97
+    ],
+    "granada": [
+      37.18,
+      -3.6
+    ],
+    "havana": [
+      23.11,
+      -82.37
+    ],
+    "helsinki": [
+      60.17,
+      24.94
+    ],
+    "hiroshima": [
+      34.39,
+      132.46
+    ],
+    "ica": [
+      -14.07,
+      -75.73
+    ],
+    "inle lake": [
+      20.55,
+      96.92
+    ],
+    "istanbul": [
+      41.01,
+      28.98
+    ],
+    "jaipur": [
+      26.91,
+      75.79
+    ],
+    "kagawa": [
+      34.27,
+      134.06
+    ],
+    "kashgar": [
+      39.47,
+      75.99
+    ],
+    "kathmandu": [
+      27.72,
+      85.32
+    ],
+    "koh samui": [
+      9.51,
+      100.01
+    ],
+    "koh tao": [
+      10.09,
+      99.84
+    ],
+    "kolkata": [
+      22.57,
+      88.36
+    ],
+    "kos": [
+      36.81,
+      27.11
+    ],
+    "krakow": [
+      50.06,
+      19.94
+    ],
+    "kraków": [
+      50.06,
+      19.94
+    ],
+    "kuala lumpur": [
+      3.14,
+      101.69
+    ],
+    "kyoto": [
+      35.01,
+      135.77
+    ],
+    "lang suan": [
+      9.94,
+      99.07
+    ],
+    "lima": [
+      -12.05,
+      -77.04
+    ],
+    "london": [
+      51.51,
+      -0.13
+    ],
+    "machu picchu": [
+      -13.16,
+      -72.54
+    ],
+    "madrid": [
+      40.42,
+      -3.7
+    ],
+    "mandalay": [
+      21.99,
+      96.09
+    ],
+    "marrakesh": [
+      31.63,
+      -8.01
+    ],
+    "melbourne": [
+      -37.81,
+      144.96
+    ],
+    "mendoza": [
+      -32.89,
+      -68.83
+    ],
+    "milan": [
+      45.47,
+      9.19
+    ],
+    "mumbai": [
+      19.08,
+      72.88
+    ],
+    "niigata": [
+      37.91,
+      139.04
+    ],
+    "okinawa": [
+      26.33,
+      127.8
+    ],
+    "olbia": [
+      40.92,
+      9.5
+    ],
+    "osaka": [
+      34.69,
+      135.5
+    ],
+    "oslo": [
+      59.91,
+      10.75
+    ],
+    "palau": [
+      41.18,
+      9.38
+    ],
+    "panama city": [
+      8.98,
+      -79.52
+    ],
+    "paris": [
+      48.86,
+      2.35
+    ],
+    "pisa": [
+      43.72,
+      10.4
+    ],
+    "pokhara": [
+      28.21,
+      83.99
+    ],
+    "pompeii": [
+      40.75,
+      14.49
+    ],
+    "positano": [
+      40.63,
+      14.49
+    ],
+    "prague": [
+      50.08,
+      14.42
+    ],
+    "riga": [
+      56.95,
+      24.11
+    ],
+    "rome": [
+      41.9,
+      12.5
+    ],
+    "san francisco": [
+      37.77,
+      -122.42
+    ],
+    "santorini": [
+      36.39,
+      25.46
+    ],
+    "sao paulo": [
+      -23.55,
+      -46.63
+    ],
+    "shanghai": [
+      31.23,
+      121.47
+    ],
+    "sorrento": [
+      40.63,
+      14.38
+    ],
+    "stavanger": [
+      58.97,
+      5.73
+    ],
+    "stockholm": [
+      59.33,
+      18.07
+    ],
+    "taketomi": [
+      24.33,
+      124.18
+    ],
+    "tallinn": [
+      59.44,
+      24.75
+    ],
+    "tangier": [
+      35.77,
+      -5.8
+    ],
+    "tashirojima": [
+      38.3,
+      141.42
+    ],
+    "tokyo": [
+      35.68,
+      139.69
+    ],
+    "toledo": [
+      39.86,
+      -4.02
+    ],
+    "trinidad": [
+      21.8,
+      -79.98
+    ],
+    "turku": [
+      60.45,
+      22.27
+    ],
+    "turpan": [
+      42.95,
+      89.18
+    ],
+    "urumqi": [
+      43.83,
+      87.62
+    ],
+    "varadero": [
+      23.16,
+      -81.25
+    ],
+    "varanasi": [
+      25.32,
+      83.01
+    ],
+    "venice": [
+      45.44,
+      12.32
+    ],
+    "versailles": [
+      48.8,
+      2.14
+    ],
+    "vienna": [
+      48.21,
+      16.37
+    ],
+    "vilnius": [
+      54.69,
+      25.28
+    ],
+    "warsaw": [
+      52.24,
+      21.01
+    ],
+    "xinjiang": [
+      41.75,
+      84.9
+    ],
+    "yangon": [
+      16.87,
+      96.2
+    ],
+    "yushima": [
+      35.72,
+      139.77
+    ],
+    "zurich": [
+      47.38,
+      8.54
+    ]
+  },
+  "country_centers": {
+    "Argentina": [
+      -38.42,
+      -63.62
+    ],
+    "Australia": [
+      -25.27,
+      133.78
+    ],
+    "Austria": [
+      47.52,
+      14.55
+    ],
+    "Belgium": [
+      50.5,
+      4.47
+    ],
+    "Brazil": [
+      -14.24,
+      -51.93
+    ],
+    "China": [
+      35.86,
+      104.2
+    ],
+    "Croatia": [
+      45.1,
+      15.2
+    ],
+    "Cuba": [
+      21.52,
+      -77.78
+    ],
+    "Cyprus": [
+      35.13,
+      33.43
+    ],
+    "Czech Republic": [
+      49.82,
+      15.47
+    ],
+    "Denmark": [
+      56.26,
+      9.5
+    ],
+    "Egypt": [
+      26.82,
+      30.8
+    ],
+    "Estonia": [
+      58.6,
+      25.01
+    ],
+    "Finland": [
+      61.92,
+      25.75
+    ],
+    "France": [
+      46.6,
+      1.89
+    ],
+    "Germany": [
+      51.17,
+      10.45
+    ],
+    "Greece": [
+      39.07,
+      21.82
+    ],
+    "Hungary": [
+      47.16,
+      19.5
+    ],
+    "India": [
+      20.59,
+      78.96
+    ],
+    "Indonesia": [
+      -0.79,
+      113.92
+    ],
+    "Iraq": [
+      33.22,
+      43.68
+    ],
+    "Ireland": [
+      53.14,
+      -8.24
+    ],
+    "Israel": [
+      31.05,
+      34.85
+    ],
+    "Italy": [
+      41.87,
+      12.57
+    ],
+    "Japan": [
+      36.2,
+      138.25
+    ],
+    "Jordan": [
+      31.24,
+      36.85
+    ],
+    "Laos": [
+      19.86,
+      102.5
+    ],
+    "Latvia": [
+      56.88,
+      24.6
+    ],
+    "Lithuania": [
+      55.17,
+      23.88
+    ],
+    "Malaysia": [
+      4.21,
+      101.98
+    ],
+    "Mexico": [
+      23.63,
+      -102.55
+    ],
+    "Monaco": [
+      43.74,
+      7.42
+    ],
+    "Morocco": [
+      31.17,
+      -7.13
+    ],
+    "Myanmar": [
+      21.92,
+      95.96
+    ],
+    "Nepal": [
+      28.39,
+      84.12
+    ],
+    "Netherlands": [
+      52.13,
+      5.29
+    ],
+    "Norway": [
+      60.47,
+      8.47
+    ],
+    "Panama": [
+      8.54,
+      -80.78
+    ],
+    "Peru": [
+      -9.19,
+      -75.02
+    ],
+    "Philippines": [
+      12.88,
+      121.77
+    ],
+    "Poland": [
+      52.07,
+      19.48
+    ],
+    "Portugal": [
+      39.4,
+      -8.22
+    ],
+    "Romania": [
+      45.94,
+      24.97
+    ],
+    "Russia": [
+      61.52,
+      105.32
+    ],
+    "Seychelles": [
+      -4.68,
+      55.49
+    ],
+    "Singapore": [
+      1.35,
+      103.82
+    ],
+    "Slovakia": [
+      48.67,
+      19.7
+    ],
+    "Slovenia": [
+      46.15,
+      14.99
+    ],
+    "South Africa": [
+      -30.56,
+      22.94
+    ],
+    "South Korea": [
+      35.91,
+      127.77
+    ],
+    "Spain": [
+      40.46,
+      -3.75
+    ],
+    "Sweden": [
+      60.13,
+      18.64
+    ],
+    "Switzerland": [
+      46.82,
+      8.23
+    ],
+    "Taiwan": [
+      23.7,
+      120.96
+    ],
+    "Thailand": [
+      15.87,
+      100.99
+    ],
+    "Tunisia": [
+      33.89,
+      9.54
+    ],
+    "Turkey": [
+      38.96,
+      35.24
+    ],
+    "UAE": [
+      23.42,
+      53.85
+    ],
+    "United Arab Emirates": [
+      23.42,
+      53.85
+    ],
+    "United Kingdom": [
+      55.38,
+      -3.44
+    ],
+    "United States": [
+      37.09,
+      -95.71
+    ],
+    "Uruguay": [
+      -32.52,
+      -55.77
+    ],
+    "Vatican City": [
+      41.9,
+      12.45
+    ],
+    "Vietnam": [
+      14.06,
+      108.28
+    ]
+  },
+  "country_name_aliases": {
+    "czech republic": "Czech Republic",
+    "czechia": "Czech Republic",
+    "uae": "United Arab Emirates",
+    "uk": "United Kingdom",
+    "usa": "United States"
+  },
+  "all_countries": [
+    [
+      "af",
+      "Afghanistan"
+    ],
+    [
+      "al",
+      "Albania"
+    ],
+    [
+      "dz",
+      "Algeria"
+    ],
+    [
+      "ad",
+      "Andorra"
+    ],
+    [
+      "ao",
+      "Angola"
+    ],
+    [
+      "ag",
+      "Antigua and Barbuda"
+    ],
+    [
+      "ar",
+      "Argentina"
+    ],
+    [
+      "am",
+      "Armenia"
+    ],
+    [
+      "au",
+      "Australia"
+    ],
+    [
+      "at",
+      "Austria"
+    ],
+    [
+      "az",
+      "Azerbaijan"
+    ],
+    [
+      "bs",
+      "Bahamas"
+    ],
+    [
+      "bh",
+      "Bahrain"
+    ],
+    [
+      "bd",
+      "Bangladesh"
+    ],
+    [
+      "bb",
+      "Barbados"
+    ],
+    [
+      "by",
+      "Belarus"
+    ],
+    [
+      "be",
+      "Belgium"
+    ],
+    [
+      "bz",
+      "Belize"
+    ],
+    [
+      "bj",
+      "Benin"
+    ],
+    [
+      "bt",
+      "Bhutan"
+    ],
+    [
+      "bo",
+      "Bolivia"
+    ],
+    [
+      "ba",
+      "Bosnia and Herzegovina"
+    ],
+    [
+      "bw",
+      "Botswana"
+    ],
+    [
+      "br",
+      "Brazil"
+    ],
+    [
+      "bn",
+      "Brunei"
+    ],
+    [
+      "bg",
+      "Bulgaria"
+    ],
+    [
+      "bf",
+      "Burkina Faso"
+    ],
+    [
+      "bi",
+      "Burundi"
+    ],
+    [
+      "cv",
+      "Cabo Verde"
+    ],
+    [
+      "kh",
+      "Cambodia"
+    ],
+    [
+      "cm",
+      "Cameroon"
+    ],
+    [
+      "ca",
+      "Canada"
+    ],
+    [
+      "cf",
+      "Central African Republic"
+    ],
+    [
+      "td",
+      "Chad"
+    ],
+    [
+      "cl",
+      "Chile"
+    ],
+    [
+      "cn",
+      "China"
+    ],
+    [
+      "co",
+      "Colombia"
+    ],
+    [
+      "km",
+      "Comoros"
+    ],
+    [
+      "cg",
+      "Congo"
+    ],
+    [
+      "cd",
+      "Congo (DRC)"
+    ],
+    [
+      "cr",
+      "Costa Rica"
+    ],
+    [
+      "ci",
+      "Côte d'Ivoire"
+    ],
+    [
+      "hr",
+      "Croatia"
+    ],
+    [
+      "cu",
+      "Cuba"
+    ],
+    [
+      "cy",
+      "Cyprus"
+    ],
+    [
+      "cz",
+      "Czech Republic"
+    ],
+    [
+      "dk",
+      "Denmark"
+    ],
+    [
+      "dj",
+      "Djibouti"
+    ],
+    [
+      "dm",
+      "Dominica"
+    ],
+    [
+      "do",
+      "Dominican Republic"
+    ],
+    [
+      "ec",
+      "Ecuador"
+    ],
+    [
+      "eg",
+      "Egypt"
+    ],
+    [
+      "sv",
+      "El Salvador"
+    ],
+    [
+      "gq",
+      "Equatorial Guinea"
+    ],
+    [
+      "er",
+      "Eritrea"
+    ],
+    [
+      "ee",
+      "Estonia"
+    ],
+    [
+      "sz",
+      "Eswatini"
+    ],
+    [
+      "et",
+      "Ethiopia"
+    ],
+    [
+      "fj",
+      "Fiji"
+    ],
+    [
+      "fi",
+      "Finland"
+    ],
+    [
+      "fr",
+      "France"
+    ],
+    [
+      "ga",
+      "Gabon"
+    ],
+    [
+      "gm",
+      "Gambia"
+    ],
+    [
+      "ge",
+      "Georgia"
+    ],
+    [
+      "de",
+      "Germany"
+    ],
+    [
+      "gh",
+      "Ghana"
+    ],
+    [
+      "gr",
+      "Greece"
+    ],
+    [
+      "gd",
+      "Grenada"
+    ],
+    [
+      "gt",
+      "Guatemala"
+    ],
+    [
+      "gn",
+      "Guinea"
+    ],
+    [
+      "gw",
+      "Guinea-Bissau"
+    ],
+    [
+      "gy",
+      "Guyana"
+    ],
+    [
+      "ht",
+      "Haiti"
+    ],
+    [
+      "hn",
+      "Honduras"
+    ],
+    [
+      "hu",
+      "Hungary"
+    ],
+    [
+      "is",
+      "Iceland"
+    ],
+    [
+      "in",
+      "India"
+    ],
+    [
+      "id",
+      "Indonesia"
+    ],
+    [
+      "ir",
+      "Iran"
+    ],
+    [
+      "iq",
+      "Iraq"
+    ],
+    [
+      "ie",
+      "Ireland"
+    ],
+    [
+      "il",
+      "Israel"
+    ],
+    [
+      "it",
+      "Italy"
+    ],
+    [
+      "jm",
+      "Jamaica"
+    ],
+    [
+      "jp",
+      "Japan"
+    ],
+    [
+      "jo",
+      "Jordan"
+    ],
+    [
+      "kz",
+      "Kazakhstan"
+    ],
+    [
+      "ke",
+      "Kenya"
+    ],
+    [
+      "ki",
+      "Kiribati"
+    ],
+    [
+      "kw",
+      "Kuwait"
+    ],
+    [
+      "kg",
+      "Kyrgyzstan"
+    ],
+    [
+      "la",
+      "Laos"
+    ],
+    [
+      "lv",
+      "Latvia"
+    ],
+    [
+      "lb",
+      "Lebanon"
+    ],
+    [
+      "ls",
+      "Lesotho"
+    ],
+    [
+      "lr",
+      "Liberia"
+    ],
+    [
+      "ly",
+      "Libya"
+    ],
+    [
+      "li",
+      "Liechtenstein"
+    ],
+    [
+      "lt",
+      "Lithuania"
+    ],
+    [
+      "lu",
+      "Luxembourg"
+    ],
+    [
+      "mg",
+      "Madagascar"
+    ],
+    [
+      "mw",
+      "Malawi"
+    ],
+    [
+      "my",
+      "Malaysia"
+    ],
+    [
+      "mv",
+      "Maldives"
+    ],
+    [
+      "ml",
+      "Mali"
+    ],
+    [
+      "mt",
+      "Malta"
+    ],
+    [
+      "mh",
+      "Marshall Islands"
+    ],
+    [
+      "mr",
+      "Mauritania"
+    ],
+    [
+      "mu",
+      "Mauritius"
+    ],
+    [
+      "mx",
+      "Mexico"
+    ],
+    [
+      "fm",
+      "Micronesia"
+    ],
+    [
+      "md",
+      "Moldova"
+    ],
+    [
+      "mc",
+      "Monaco"
+    ],
+    [
+      "mn",
+      "Mongolia"
+    ],
+    [
+      "me",
+      "Montenegro"
+    ],
+    [
+      "ma",
+      "Morocco"
+    ],
+    [
+      "mz",
+      "Mozambique"
+    ],
+    [
+      "mm",
+      "Myanmar"
+    ],
+    [
+      "na",
+      "Namibia"
+    ],
+    [
+      "nr",
+      "Nauru"
+    ],
+    [
+      "np",
+      "Nepal"
+    ],
+    [
+      "nl",
+      "Netherlands"
+    ],
+    [
+      "nz",
+      "New Zealand"
+    ],
+    [
+      "ni",
+      "Nicaragua"
+    ],
+    [
+      "ne",
+      "Niger"
+    ],
+    [
+      "ng",
+      "Nigeria"
+    ],
+    [
+      "kp",
+      "North Korea"
+    ],
+    [
+      "mk",
+      "North Macedonia"
+    ],
+    [
+      "no",
+      "Norway"
+    ],
+    [
+      "om",
+      "Oman"
+    ],
+    [
+      "pk",
+      "Pakistan"
+    ],
+    [
+      "pw",
+      "Palau"
+    ],
+    [
+      "ps",
+      "Palestine"
+    ],
+    [
+      "pa",
+      "Panama"
+    ],
+    [
+      "pg",
+      "Papua New Guinea"
+    ],
+    [
+      "py",
+      "Paraguay"
+    ],
+    [
+      "pe",
+      "Peru"
+    ],
+    [
+      "ph",
+      "Philippines"
+    ],
+    [
+      "pl",
+      "Poland"
+    ],
+    [
+      "pt",
+      "Portugal"
+    ],
+    [
+      "qa",
+      "Qatar"
+    ],
+    [
+      "ro",
+      "Romania"
+    ],
+    [
+      "ru",
+      "Russia"
+    ],
+    [
+      "rw",
+      "Rwanda"
+    ],
+    [
+      "kn",
+      "Saint Kitts and Nevis"
+    ],
+    [
+      "lc",
+      "Saint Lucia"
+    ],
+    [
+      "vc",
+      "Saint Vincent and the Grenadines"
+    ],
+    [
+      "ws",
+      "Samoa"
+    ],
+    [
+      "sm",
+      "San Marino"
+    ],
+    [
+      "st",
+      "Sao Tome and Principe"
+    ],
+    [
+      "sa",
+      "Saudi Arabia"
+    ],
+    [
+      "sn",
+      "Senegal"
+    ],
+    [
+      "rs",
+      "Serbia"
+    ],
+    [
+      "sc",
+      "Seychelles"
+    ],
+    [
+      "sl",
+      "Sierra Leone"
+    ],
+    [
+      "sg",
+      "Singapore"
+    ],
+    [
+      "sk",
+      "Slovakia"
+    ],
+    [
+      "si",
+      "Slovenia"
+    ],
+    [
+      "sb",
+      "Solomon Islands"
+    ],
+    [
+      "so",
+      "Somalia"
+    ],
+    [
+      "za",
+      "South Africa"
+    ],
+    [
+      "kr",
+      "South Korea"
+    ],
+    [
+      "ss",
+      "South Sudan"
+    ],
+    [
+      "es",
+      "Spain"
+    ],
+    [
+      "lk",
+      "Sri Lanka"
+    ],
+    [
+      "sd",
+      "Sudan"
+    ],
+    [
+      "sr",
+      "Suriname"
+    ],
+    [
+      "se",
+      "Sweden"
+    ],
+    [
+      "ch",
+      "Switzerland"
+    ],
+    [
+      "sy",
+      "Syria"
+    ],
+    [
+      "tw",
+      "Taiwan"
+    ],
+    [
+      "tj",
+      "Tajikistan"
+    ],
+    [
+      "tz",
+      "Tanzania"
+    ],
+    [
+      "th",
+      "Thailand"
+    ],
+    [
+      "tl",
+      "Timor-Leste"
+    ],
+    [
+      "tg",
+      "Togo"
+    ],
+    [
+      "to",
+      "Tonga"
+    ],
+    [
+      "tt",
+      "Trinidad and Tobago"
+    ],
+    [
+      "tn",
+      "Tunisia"
+    ],
+    [
+      "tr",
+      "Turkey"
+    ],
+    [
+      "tm",
+      "Turkmenistan"
+    ],
+    [
+      "tv",
+      "Tuvalu"
+    ],
+    [
+      "ug",
+      "Uganda"
+    ],
+    [
+      "ua",
+      "Ukraine"
+    ],
+    [
+      "ae",
+      "United Arab Emirates"
+    ],
+    [
+      "gb",
+      "United Kingdom"
+    ],
+    [
+      "us",
+      "United States"
+    ],
+    [
+      "uy",
+      "Uruguay"
+    ],
+    [
+      "uz",
+      "Uzbekistan"
+    ],
+    [
+      "vu",
+      "Vanuatu"
+    ],
+    [
+      "va",
+      "Vatican City"
+    ],
+    [
+      "ve",
+      "Venezuela"
+    ],
+    [
+      "vn",
+      "Vietnam"
+    ],
+    [
+      "ye",
+      "Yemen"
+    ],
+    [
+      "zm",
+      "Zambia"
+    ],
+    [
+      "zw",
+      "Zimbabwe"
+    ]
+  ],
+  "num_to_a2": {
+    "4": "af",
+    "8": "al",
+    "12": "dz",
+    "20": "ad",
+    "24": "ao",
+    "28": "ag",
+    "31": "az",
+    "32": "ar",
+    "36": "au",
+    "40": "at",
+    "44": "bs",
+    "48": "bh",
+    "50": "bd",
+    "51": "am",
+    "52": "bb",
+    "56": "be",
+    "64": "bt",
+    "68": "bo",
+    "70": "ba",
+    "72": "bw",
+    "76": "br",
+    "84": "bz",
+    "90": "sb",
+    "96": "bn",
+    "100": "bg",
+    "104": "mm",
+    "108": "bi",
+    "112": "by",
+    "116": "kh",
+    "120": "cm",
+    "124": "ca",
+    "132": "cv",
+    "140": "cf",
+    "144": "lk",
+    "148": "td",
+    "152": "cl",
+    "156": "cn",
+    "158": "tw",
+    "170": "co",
+    "174": "km",
+    "178": "cg",
+    "180": "cd",
+    "188": "cr",
+    "191": "hr",
+    "192": "cu",
+    "196": "cy",
+    "203": "cz",
+    "204": "bj",
+    "208": "dk",
+    "212": "dm",
+    "214": "do",
+    "218": "ec",
+    "222": "sv",
+    "226": "gq",
+    "231": "et",
+    "232": "er",
+    "233": "ee",
+    "242": "fj",
+    "246": "fi",
+    "250": "fr",
+    "262": "dj",
+    "266": "ga",
+    "268": "ge",
+    "270": "gm",
+    "275": "ps",
+    "276": "de",
+    "288": "gh",
+    "296": "ki",
+    "300": "gr",
+    "308": "gd",
+    "320": "gt",
+    "324": "gn",
+    "328": "gy",
+    "332": "ht",
+    "336": "va",
+    "340": "hn",
+    "348": "hu",
+    "352": "is",
+    "356": "in",
+    "360": "id",
+    "364": "ir",
+    "368": "iq",
+    "372": "ie",
+    "376": "il",
+    "380": "it",
+    "384": "ci",
+    "388": "jm",
+    "392": "jp",
+    "398": "kz",
+    "400": "jo",
+    "404": "ke",
+    "408": "kp",
+    "410": "kr",
+    "414": "kw",
+    "417": "kg",
+    "418": "la",
+    "422": "lb",
+    "426": "ls",
+    "428": "lv",
+    "430": "lr",
+    "434": "ly",
+    "438": "li",
+    "440": "lt",
+    "442": "lu",
+    "450": "mg",
+    "454": "mw",
+    "458": "my",
+    "462": "mv",
+    "466": "ml",
+    "470": "mt",
+    "478": "mr",
+    "480": "mu",
+    "484": "mx",
+    "492": "mc",
+    "496": "mn",
+    "498": "md",
+    "499": "me",
+    "504": "ma",
+    "508": "mz",
+    "512": "om",
+    "516": "na",
+    "520": "nr",
+    "524": "np",
+    "528": "nl",
+    "540": "nc",
+    "548": "vu",
+    "554": "nz",
+    "558": "ni",
+    "562": "ne",
+    "566": "ng",
+    "578": "no",
+    "583": "fm",
+    "584": "mh",
+    "585": "pw",
+    "586": "pk",
+    "591": "pa",
+    "598": "pg",
+    "600": "py",
+    "604": "pe",
+    "608": "ph",
+    "616": "pl",
+    "620": "pt",
+    "624": "gw",
+    "626": "tl",
+    "634": "qa",
+    "642": "ro",
+    "643": "ru",
+    "646": "rw",
+    "659": "kn",
+    "662": "lc",
+    "670": "vc",
+    "674": "sm",
+    "678": "st",
+    "682": "sa",
+    "686": "sn",
+    "688": "rs",
+    "690": "sc",
+    "694": "sl",
+    "702": "sg",
+    "703": "sk",
+    "704": "vn",
+    "705": "si",
+    "706": "so",
+    "710": "za",
+    "716": "zw",
+    "724": "es",
+    "728": "ss",
+    "729": "sd",
+    "740": "sr",
+    "748": "sz",
+    "752": "se",
+    "756": "ch",
+    "760": "sy",
+    "762": "tj",
+    "764": "th",
+    "768": "tg",
+    "772": "to",
+    "780": "tt",
+    "784": "ae",
+    "788": "tn",
+    "792": "tr",
+    "795": "tm",
+    "798": "tv",
+    "800": "ug",
+    "804": "ua",
+    "807": "mk",
+    "818": "eg",
+    "826": "gb",
+    "834": "tz",
+    "840": "us",
+    "854": "bf",
+    "858": "uy",
+    "860": "uz",
+    "862": "ve",
+    "882": "ws",
+    "887": "ye",
+    "894": "zm"
+  },
+  "manual_codes": [
+    "va",
+    "au",
+    "ca",
+    "et",
+    "fj",
+    "id",
+    "jm",
+    "nz",
+    "ph",
+    "sg",
+    "kr",
+    "lk",
+    "gb",
+    "vn",
+    "kh",
+    "tw"
+  ],
+  "total": 196
+}
