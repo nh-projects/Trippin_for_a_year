@@ -3,9 +3,11 @@
 
 import argparse
 import json
+import math
 import os
 import re
 import sys
+from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 from xml.etree import ElementTree
@@ -227,6 +229,24 @@ def parse_feed(xml_text):
     return posts
 
 
+def jitter_coords(results):
+    groups = defaultdict(list)
+    for i, post in enumerate(results):
+        key = (round(post["lat"], 4), round(post["lng"], 4))
+        groups[key].append(i)
+
+    for (base_lat, base_lng), indices in groups.items():
+        n = len(indices)
+        if n <= 1:
+            continue
+        radius = 0.003 * n
+        cos_lat = max(math.cos(math.radians(base_lat)), 0.01)
+        for j, idx in enumerate(indices):
+            angle = 2 * math.pi * j / n
+            results[idx]["lat"] = base_lat + radius * math.cos(angle)
+            results[idx]["lng"] = base_lng + radius * math.sin(angle) / cos_lat
+
+
 def process_posts(posts, overrides):
     results = []
     years = set()
@@ -281,6 +301,7 @@ def process_posts(posts, overrides):
             "desc": desc,
         })
 
+    jitter_coords(results)
     return results, years
 
 
