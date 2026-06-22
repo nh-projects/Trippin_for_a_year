@@ -352,10 +352,29 @@ def main():
 
     if PRE_BLOG_FILE.exists():
         pre_blog = json.loads(PRE_BLOG_FILE.read_text(encoding="utf-8"))
+        resolved = []
         for entry in pre_blog:
+            if "name" not in entry:
+                continue
             years.add(entry["year"])
-        processed.extend(pre_blog)
-        print(f"  Added {len(pre_blog)} pre-blog entries")
+            lat, lng = entry.get("lat"), entry.get("lng")
+            if lat is None or lng is None:
+                coords = None
+                city = entry.get("city")
+                if city:
+                    coords = CITY_COORDS.get(city.strip().lower())
+                if coords is None:
+                    coords = country_center(entry["country"])
+                if coords:
+                    lat, lng = coords
+            if lat is not None and lng is not None:
+                entry["lat"] = lat
+                entry["lng"] = lng
+                resolved.append(entry)
+            else:
+                print(f"  Warning: Could not resolve coords for '{entry.get('name', 'unknown')}', skipping")
+        processed.extend(resolved)
+        print(f"  Added {len(resolved)} pre-blog entries")
 
     print(f"  Year range: {min(years)}–{max(years)}")
 

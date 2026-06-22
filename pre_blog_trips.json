@@ -1,6 +1,10 @@
 [
   {
+    "_help": "To find lat/lng for cities not in the database: right-click in Google Maps \u2192 'What's here?', or search 'city name coordinates'. Format: latitude first (e.g. 39.7285), longitude second (e.g. -121.8375). Omit lat/lng if the city is well-known (Paris, Tokyo, etc.) \u2014 it resolves automatically."
+  },
+  {
     "name": "Homestay in the US",
+    "city": "Chico",
     "lat": 39.7285,
     "lng": -121.8375,
     "year": 1993,
@@ -9,12 +13,23 @@
     "desc": "Homestay in Chico, California"
   },
   {
-    "name": "Moving to China",
+    "name": "Moving to Shanghai",
+    "city": "Shanghai",
     "lat": 31.2304,
     "lng": 121.4737,
-    "year": 2010,
+    "year": 2003,
     "country": "China",
     "category": "Blog",
     "desc": "Moving to Shanghai"
+  },
+  {
+    "name": "Moving to Australia",
+    "city": "Perth",
+    "lat": -31.9535,
+    "lng": 151.8570,
+    "year": 1994,
+    "country": "Australia",
+    "category": "Blog",
+    "desc": "Moving to Perth, Australia"
   }
 ]
