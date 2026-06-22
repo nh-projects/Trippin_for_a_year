@@ -54,9 +54,9 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 <div class="sidebar">
   <div class="filter-group">
     <label>Places we've been</label>
-    <input type="range" id="yearSlider" min="2013" max="2025" value="2025" step="1">
+    <input type="range" id="yearSlider" min="1993" max="2025" value="2025" step="1">
     <div class="year-display" id="yearDisplay">2025</div>
-    <div class="year-labels"><span>2013</span><span>2025</span></div>
+    <div class="year-labels"><span>1993</span><span>2025</span></div>
   </div>
 
   <div class="filter-group">
@@ -273,7 +273,7 @@ var DATA =
     },
     {
       "name": "Photos from San Francisco",
-      "lat": 37.776,
+      "lat": 37.77,
       "lng": -122.42,
       "year": 2015,
       "country": "United States",
@@ -283,8 +283,8 @@ var DATA =
     },
     {
       "name": "Our last stop - San Francisco",
-      "lat": 37.764,
-      "lng": -122.42,
+      "lat": 37.7749295,
+      "lng": -122.4194155,
       "year": 2015,
       "country": "United States",
       "category": "Blog",
@@ -433,8 +433,8 @@ var DATA =
     },
     {
       "name": "Most scenic border crossing - Mendoza to Santiago",
-      "lat": -32.878,
-      "lng": -68.83,
+      "lat": -32.9107228,
+      "lng": -69.9984229,
       "year": 2014,
       "country": "Argentina",
       "category": "Blog",
@@ -443,18 +443,18 @@ var DATA =
     },
     {
       "name": "Photos from Mendoza",
-      "lat": -32.89,
-      "lng": -68.81570943123481,
+      "lat": -32.8835,
+      "lng": -68.8458,
       "year": 2014,
       "country": "Argentina",
       "category": "Photos",
       "url": "https://www.trippinforayear.com/2014/10/photos-from-mendoza.html",
-      "desc": "More photos from beautiful Mendoza..."
+      "desc": "More photos from beautiful Mendoza... In short, great wine & great food = amazing place"
     },
     {
       "name": "Winery & Hot Spring in Mendoza",
-      "lat": -32.902,
-      "lng": -68.83,
+      "lat": -32.8955,
+      "lng": -68.8458,
       "year": 2014,
       "country": "Argentina",
       "category": "Blog",
@@ -464,7 +464,7 @@ var DATA =
     {
       "name": "Buenos Aires to Mendoza",
       "lat": -32.89,
-      "lng": -68.84429056876519,
+      "lng": -68.83,
       "year": 2014,
       "country": "Argentina",
       "category": "Cats",
@@ -743,13 +743,13 @@ var DATA =
     },
     {
       "name": "Photos from Estonia, Latvia & Lithuania",
-      "lat": 56.95,
-      "lng": 24.11,
+      "lat": 59.43696079999999,
+      "lng": 24.7535746,
       "year": 2014,
       "country": "Estonia",
       "category": "Photos",
       "url": "https://www.trippinforayear.com/2014/07/photos-from-estonia-latvia-lithuania.html",
-      "desc": "Tallinn, Estonia Riga, Latvia Lithuania First stop: Tallinn, Estonia Second stop: Riga, Latvia T We didn't stop in..."
+      "desc": "Tallinn, Estonia Riga, Latvia Lithuania First stop: Tallinn, Estonia Second stop: Riga, Latvia We didn't stop in..."
     },
     {
       "name": "Lightning tour of eastern Europe",
@@ -2040,6 +2040,15 @@ var DATA =
       "category": "Blog",
       "url": "https://www.trippinforayear.com/2013/12/preparation-5-months-to-go-visa-and.html",
       "desc": "Visas and Vaccinations Visas Part of the joy of international travel is the visa requirements for many countries. As..."
+    },
+    {
+      "name": "Homestay in the US",
+      "lat": 39.7285,
+      "lng": -121.8375,
+      "year": 1993,
+      "country": "United States",
+      "category": "Blog",
+      "desc": "Homestay in Chico, California"
     }
   ]
 ;
@@ -2113,7 +2122,7 @@ function renderMarkers() {
       '<p><strong>Country:</strong> ' + item.country + ' &middot; <strong>Year:</strong> ' + item.year + '</p>' +
       '<p><span class="category-tag">' + item.category + '</span></p>' +
       '<p>' + item.desc + '</p>' +
-      '<a href="' + item.url + '" target="_blank">Read post &rarr;</a></div>'
+      (item.url ? '<a href="' + item.url + '" target="_blank">Read post &rarr;</a>' : '') + '</div>'
     );
     markerLayer.addLayer(marker);
   });

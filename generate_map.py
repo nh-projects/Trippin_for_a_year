@@ -23,6 +23,7 @@ from countries_data import (
 FEED_URL = "https://www.trippinforayear.com/feeds/posts/default"
 CACHE_FILE = Path(".feed-cache.xml")
 OVERRIDES_FILE = Path("overrides.json")
+PRE_BLOG_FILE = Path("pre_blog_trips.json")
 TEMPLATE_FILE = Path("world-map.template.html")
 OUTPUT_FILE = Path("world-map.html")
 CACHE_MAX_AGE = 3600
@@ -348,6 +349,14 @@ def main():
     print("Processing posts...")
     processed, years = process_posts(posts, overrides)
     print(f"  {len(processed)} posts with coordinates")
+
+    if PRE_BLOG_FILE.exists():
+        pre_blog = json.loads(PRE_BLOG_FILE.read_text(encoding="utf-8"))
+        for entry in pre_blog:
+            years.add(entry["year"])
+        processed.extend(pre_blog)
+        print(f"  Added {len(pre_blog)} pre-blog entries")
+
     print(f"  Year range: {min(years)}–{max(years)}")
 
     print("Generating output...")

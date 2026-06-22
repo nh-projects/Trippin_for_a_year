@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Homestay in the US",
+    "lat": 39.7285,
+    "lng": -121.8375,
+    "year": 1993,
+    "country": "United States",
+    "category": "Blog",
+    "desc": "Homestay in Chico, California"
+  },
+  {
+    "name": "Moving to China",
+    "lat": 31.2304,
+    "lng": 121.4737,
+    "year": 2010,
+    "country": "China",
+    "category": "Blog",
+    "desc": "Moving to Shanghai"
+  }
+]

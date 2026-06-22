@@ -170,7 +170,7 @@ function renderMarkers() {
       '<p><strong>Country:</strong> ' + item.country + ' &middot; <strong>Year:</strong> ' + item.year + '</p>' +
       '<p><span class="category-tag">' + item.category + '</span></p>' +
       '<p>' + item.desc + '</p>' +
-      '<a href="' + item.url + '" target="_blank">Read post &rarr;</a></div>'
+      (item.url ? '<a href="' + item.url + '" target="_blank">Read post &rarr;</a>' : '') + '</div>'
     );
     markerLayer.addLayer(marker);
   });
