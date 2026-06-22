@@ -9,7 +9,7 @@
     "lng": -121.8375,
     "year": 1993,
     "country": "United States",
-    "category": "Blog",
+    "category": "Trip",
     "desc": "Homestay in Chico, California"
   },
   {
@@ -19,7 +19,7 @@
     "lng": 121.4737,
     "year": 2003,
     "country": "China",
-    "category": "Blog",
+    "category": "Trip",
     "desc": "Moving to Shanghai"
   },
   {
@@ -29,7 +29,7 @@
     "lng": 151.8570,
     "year": 1994,
     "country": "Australia",
-    "category": "Blog",
+    "category": "Trip",
     "desc": "Moving to Perth, Australia"
   }
 ]
