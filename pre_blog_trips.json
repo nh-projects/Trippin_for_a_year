@@ -31,5 +31,15 @@
     "country": "Australia",
     "category": "Trip",
     "desc": "Moving to Perth, Australia"
+  },
+  {
+    "name": "Second Homestay in the US",
+    "city": "Weaverville, CA",
+    "lat": 40.734067,
+    "lng": -122.943025,
+    "year": 2007,
+    "country": "United States",
+    "category": "Trip",
+    "desc": "Homestay in Weaverville, CA"
   }
 ]
