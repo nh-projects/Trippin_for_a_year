@@ -81,7 +81,187 @@
     "country": "Cambodia  & Thailand",
     "category": "Trip",
     "desc": "Holiday in Cambodia & Thailand"
-  } 
+  },
+  {
+    "name": "Holiday in Combodia & Thailand",
+    "city": "Koh Samui, Thailand",
+    "lat": 9.524276,
+    "lng": 100.058594,
+    "year": 2007,
+    "country": "Cambodia  & Thailand",
+    "category": "Trip",
+    "desc": "Holiday in Cambodia & Thailand"
+  },
+  {
+    "name": "Visiting Brother in NYC",
+    "city": "New York City, USA",
+    "lat": 40.7128,
+    "lng": -74.0060,
+    "year": 2007,
+    "country": "United States",
+    "category": "Trip",
+    "desc": "Visiting Brother in NYC"
+  },
+  {
+    "name": "Chicago and NYC",
+    "city": "Chicago, USA",
+    "lat": 41.8781,
+    "lng": -87.6298,
+    "year": 2009,
+    "country": "United States",
+    "category": "Trip",
+    "desc": "Chicago and NYC" 
+  },  
+  {
+    "name": "Ayers Rock with Mum",
+    "city": "Ayers Rock, Australia",
+    "lat": -23.4066,
+    "lng": 133.8949,
+    "year": 2009,
+    "country": "Australia",
+    "category": "Trip",
+    "desc": "Ayers Rock with Mum"
+   }, 
+    {
+      "name": "Spain Trip with Mum",
+      "city": "Valencia, Spain",
+      "lat": 39.4699,
+      "lng": -0.3763,
+      "year": 2011,
+      "country": "Spain",
+      "category": "Trip",
+      "desc": "Spain Trip with Mum"
+    },
+    {
+      "name": "Tahiti Holiday",
+      "city": "Moorea, French Polynesia",
+      "lat": 17.5322,
+      "lng": -149.5728,
+      "year": 2011,
+      "country": "French Polynesia",
+      "category": "Trip",
+      "desc": "Tahiti Holiday"
+    },
+    {
+      "name": "Tahiti Holiday",
+      "city": "Bora Bora, French Polynesia",
+      "lat": -16.498708,
+      "lng": -151.740520,
+      "year": 2011,
+      "country": "French Polynesia",
+      "category": "Trip",
+      "desc": "Tahiti Holiday"
+    },
+    {
+      "name": "Tahiti Holiday",
+      "city": "Papeete, French Polynesia",
+      "lat": -17.5516,
+      "lng": -149.5585,
+      "year": 2011,
+      "country": "French Polynesia",
+      "category": "Trip",
+      "desc": "Tahiti Holiday"
+    },
+    {
+      "name": "Easter in Cairns",
+      "city": "Cairns, Australia",
+      "lat": -16.9205,
+      "lng": 145.7781,
+      "year": 2012,
+      "country": "Australia",
+      "category": "Trip",
+      "desc": "Easter in Cairns"
+    },
+    {
+      "name": "Weekend in Melbourne",
+      "city": "Melbourne, Australia",
+      "lat": -37.8136,
+      "lng": 144.9631,
+      "year": 2012,
+      "country": "Australia",
+      "category": "Trip",
+      "desc": "Weekend in Melbourne"
+    },
+    {
+      "name": "Italy with Mum",
+      "city": "Rome, Italy",
+      "lat": 41.9029,
+      "lng": 12.4964,
+      "year": 2012,
+      "country": "Italy",
+      "category": "Trip",
+      "desc": "Italy with Mum"
+    },
+    {
+      "name": "Tasmania Long Weekend",
+      "city": "Cradle mountain, Tasmania",
+      "lat": -41.679262,
+      "lng": 145.939914,
+      "year": 2012,
+      "country": "Australia",
+      "category": "Trip",
+      "desc": "Tasmania Long Weekend"
+    },
+    {
+      "name": "NYC, Austin & LA",
+      "city": "Austin, USA",
+      "lat": 30.2672,
+      "lng": -97.7431,
+      "year": 2012,
+      "country": "USA",
+      "category": "Trip",
+      "desc": "NYC, Austin & LA"
+    },
+    {
+      "name": "Holiday in Guam",
+      "city": "Guam, USA",
+      "lat": 13.4443,
+      "lng": 144.7937,
+      "year": 2013,
+      "country": "USA",
+      "category": "Trip",
+      "desc": "Holiday in Guam"
+    },
+  {
+    "name": "Frode's Birthday in Okinawa",
+    "city": "Naha, Okinawa, Japan",
+    "lat": 26.705703,
+    "lng": 128.012140,
+    "year": 2013,
+    "country": "Japan",
+    "category": "Trip",
+    "desc": "Frode's Birthday in Okinawa"
+   },
+   {
+    "name": "Korea Trip with Mum",
+    "city": "Seoul, South Korea",
+    "lat": 37.5665,
+    "lng": 126.9780,
+    "year": 2014,
+    "country": "South Korea",
+    "category": "Trip",
+    "desc": "Korea Trip with Mum"
+   },
+   {
+    "name": "Aloha in Hawaii",
+    "city": "Honolulu, Hawaii",
+    "lat": 21.3069,
+    "lng": -157.8583,
+    "year": 2013,
+    "country": "USA",
+    "category": "Trip",
+    "desc": "Aloha in Hawaii"
+   },
+   {
+    "name": "Aloha in Hawaii",
+    "city": "Waikoloa, Hawaii",
+    "lat": 19.929888,
+    "lng": -155.887308,
+    "year": 2013,
+    "country": "USA",
+    "category": "Trip",
+    "desc": "Aloha in Hawaii"
+   }
 
 
   
