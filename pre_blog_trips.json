@@ -37,9 +37,52 @@
     "city": "Weaverville, CA",
     "lat": 40.734067,
     "lng": -122.943025,
-    "year": 2007,
+    "year": 1994,
     "country": "United States",
     "category": "Trip",
     "desc": "Homestay in Weaverville, CA"
-  }
-]
+  },
+  {
+    "name": "CNY in Vietnam",
+    "city": "Mui ne, Vietnam",
+    "lat": 10.980409,
+    "lng": 108.262439,
+    "year": 2008,
+    "country": "Vietnam",
+    "category": "Trip",
+    "desc": "CNY in Vietnam"
+  },
+  {
+    "name": "CNY in Vietnam",
+    "city": "Danang, Vietnam",
+    "lat": 16.083383,
+    "lng": 108.201489,
+    "year": 2008,
+    "country": "Vietnam",
+    "category": "Trip",
+    "desc": "CNY in Vietnam"
+  },
+  {
+    "name": "Holiday in Combodia & Thailand",
+    "city": "Siem Reap, Cambodia",
+    "lat": 13.3613,
+    "lng": 103.8667,
+    "year": 2007,
+    "country": "Cambodia  & Thailand",
+    "category": "Trip",
+    "desc": "Holiday in Cambodia & Thailand"
+  },
+  {
+    "name": "Holiday in Combodia & Thailand",
+    "city": "Phnom Penh, Cambodia",
+    "lat": 11.5502,
+    "lng": 104.9185,
+    "year": 2007,
+    "country": "Cambodia  & Thailand",
+    "category": "Trip",
+    "desc": "Holiday in Cambodia & Thailand"
+  } 
+
+
+  
+] 
