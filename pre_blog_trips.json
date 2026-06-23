@@ -261,6 +261,277 @@
     "country": "USA",
     "category": "Trip",
     "desc": "Aloha in Hawaii"
+   },
+   {
+    "name": "Cruise from Houston to Cozumel",
+    "city": "Houston, Texas",
+    "lat": 29.762092,
+    "lng": -95.370457,
+    "year": 2003,
+    "country": "USA",
+    "category": "Trip",
+    "desc": "Cruise from Houston to Cozumel"
+   },
+   {
+    "name": "Cape Cod Visit",
+    "city": "Cape Cod, Massachusetts",
+    "lat": 41.7637,
+    "lng": -70.1407,
+    "year": 2003,
+    "country": "USA",
+    "category": "Trip",
+    "desc": "Cape Cod Visit"
+   },
+   {
+    "name": "Ko Pha Ngan with friends",
+    "city": "Ko Pha Ngan, Thailand",
+    "lat": 8.0826,
+    "lng": 100.1944,
+    "year": 2006,
+    "country": "Thailand",
+    "category": "Trip",
+    "desc": "Ko Pha Ngan with friends"
+   },
+   {
+    "name": "Holiday in Philippines",
+    "city": "Boracay, Philippines",
+    "lat": 11.9042,
+    "lng": 121.0563,
+    "year": 2007,
+    "country": "Philippines",
+    "category": "Trip",
+    "desc": "Holiday in Philippines"
+   },
+   {
+    "name": "Holiday in Philippines",
+    "city": "Manila, Philippines",
+    "lat": 14.5995,
+    "lng": 120.9842,
+    "year": 2007,
+    "country": "Philippines",
+    "category": "Trip",
+    "desc": "Holiday in Philippines"
+   },
+   {
+    "name": "Hawaii Holiday",
+    "city": "Honolulu, Hawaii",
+    "lat": 21.3069,
+    "lng": -157.8583,
+    "year": 2009,
+    "country": "USA",
+    "category": "Trip",
+    "desc": "Hawaii Holiday"
+   },
+   {
+    "name": "Weekend in Hong Kong",
+    "city": "Hong Kong, China",
+    "lat": 22.3193,
+    "lng": 114.1694,
+    "year": 2009,
+    "country": "China",
+    "category": "Trip",
+    "desc": "Weekend in Hong Kong"
+   },
+   {
+    "name": "Quick visit to Singapore",
+    "city": "Singapore",
+    "lat": 1.3521,
+    "lng": 103.8198,
+    "year": 2009,
+    "country": "Singapore",
+    "category": "Trip",
+    "desc": "Quick visit to Singapore"
+   },
+   {
+    "name": "Bali with Mum",
+    "city": "Bali, Indonesia",
+    "lat": -8.3405,
+    "lng": 115.0920,
+    "year": 2009,
+    "country": "Indonesia",
+    "category": "Trip",
+    "desc": "Bali with Mum"
+   },
+   {
+    "name": "Taiwan Business Trip",
+    "city": "Taipei, Taiwan",
+    "lat": 25.0330,
+    "lng": 121.5654,
+    "year": 2009,
+    "country": "Taiwan",
+    "category": "Trip",
+    "desc": "Taiwan Business Trip"
+   },
+   {
+    "name": "Taiwan Business Trip",
+    "city": "Kaohsiung, Taiwan",
+    "lat": 22.6406,
+    "lng": 120.3105,
+    "year": 2009,
+    "country": "Taiwan",
+    "category": "Trip",
+    "desc": "Taiwan Business Trip"
+   },
+   {
+    "name": "Visiting Perth",
+    "city": "Perth, Australia",
+    "lat": -31.9505,
+    "lng": 115.8605,
+    "year": 2009,
+    "country": "Australia",
+    "category": "Trip",
+    "desc": "Visiting Perth"
+   },
+   {
+    "name": "Holiday in Canada & Mexico",
+    "city": "Vancouver, Canada",
+    "lat": 49.2827,
+    "lng": -123.1207,
+    "year": 2005,
+    "country": "Canada",
+    "category": "Trip",
+    "desc": "Holiday in Canada & Mexico"
+   },
+   {
+    "name": "Holiday in Canada & Mexico",
+    "city": "Porto Vallarta, Mexico",
+    "lat": 20.658530,
+    "lng": -105.211327,
+    "year": 2005,
+    "country": "Mexico",
+    "category": "Trip",
+    "desc": "Holiday in Canada & Mexico"
+   },
+   {
+    "name": "Sanya Island",
+    "city": "Sanya, China",
+    "lat": 18.2527,
+    "lng": 109.6069,
+    "year": 2007,
+    "country": "China",
+    "category": "Trip",
+    "desc": "Sanya Island"
+   },
+   {
+    "name": "Koh Samui Holiday",
+    "city": "Koh Samui, Thailand",
+    "lat": 9.5432,
+    "lng": 100.0584,
+    "year": 2006,
+    "country": "Thailand",
+    "category": "Trip",
+    "desc": "Koh Samui Holiday"
+   },
+   {
+    "name": "Holiday in Fiji",
+    "city": "Nadi, Fiji",
+    "lat": -17.7500,
+    "lng": 177.4500,
+    "year": 2006,
+    "country": "Fiji",
+    "category": "Trip",
+    "desc": "Holiday in Fiji"
+   },
+   {
+    "name": "Holiday in Fiji",
+    "city": "Suva, Fiji",
+    "lat": -18.066644,
+    "lng": 178.446163,
+    "year": 2006,
+    "country": "Fiji",
+    "category": "Trip",
+    "desc": "Holiday in Fiji"
+   },
+   {
+    "name": "New Years in Thailand",
+    "city": "Bangkok, Thailand",
+    "lat": 13.7563,
+    "lng": 100.5018,
+    "year": 2006,
+    "country": "Thailand",
+    "category": "Trip",
+    "desc": "New Years in Thailand"
+   },
+   {
+    "name": "New Years in Thailand",
+    "city": "Pattaya, Thailand",
+    "lat": 12.927509,
+    "lng": 100.881900,
+    "year": 2006,
+    "country": "Thailand",
+    "category": "Trip",
+    "desc": "New Years in Thailand"
+   },
+   {
+    "name": "Trippin with Sarah",
+    "city": "Langkawi, Malaysia",
+    "lat": 6.3117,
+    "lng": 99.8382,
+    "year": 2005,
+    "country": "Malaysia",
+    "category": "Trip",
+    "desc": "Trippin with Sarah"
+   },
+   {
+    "name": "Trippin with Sarah",
+    "city": "Ko Pha Ngan, Thailand",
+    "lat": 9.742241,
+    "lng": 100.002079,
+    "year": 2005,
+    "country": "Thailand",
+    "category": "Trip",
+    "desc": "Trippin with Sarah"
+   },
+   {
+    "name": "BKK Business Trip",
+    "city": "Bangkok, Thailand",
+    "lat": 13.7563,
+    "lng": 100.5018,
+    "year": 2005,
+    "country": "Thailand",
+    "category": "Trip",
+    "desc": "BKK Business Trip"
+   },
+   {
+    "name": "Thailand Holiday",
+    "city": "Koh Phi Phi, Thailand",
+    "lat": 7.742438,
+    "lng": 98.777258,
+    "year": 2004,
+    "country": "Thailand",
+    "category": "Trip",
+    "desc": "Thailand Holiday"
+   },
+   {
+    "name": "Thailand Holiday",
+    "city": "Phuket, Thailand",
+    "lat": 7.8804,
+    "lng": 98.3923,
+    "year": 2004,
+    "country": "Thailand",
+    "category": "Trip",
+    "desc": "Thailand Holiday"
+   },
+    {
+      "name": "Thailand Holiday",
+      "city": "Krabi, Thailand",
+      "lat": 8.0872,
+      "lng": 98.9167,
+      "year": 2004,
+      "country": "Thailand",
+      "category": "Trip",
+      "desc": "Thailand Holiday"
+    
+   },
+   {
+    "name": "Weekend in Chengdu",
+    "city": "Chengdu, China",
+    "lat": 30.5728,
+    "lng": 104.0668,
+    "year": 2005,
+    "country": "China",
+    "category": "Trip",
+    "desc": "Weekend in Chengdu"
    }
 
 
