@@ -210,6 +210,21 @@ function spiderfyGroup(badge) {
   var pxRadius = Math.min(20 + 4 * n, 60);
   var spiderMarkers = [];
 
+  var ringPx = pxRadius + 10;
+  var ringEdge = map.containerPointToLatLng(L.point(center.x + ringPx, center.y));
+  var ringRadius = map.distance([lat, lng], [ringEdge.lat, ringEdge.lng]);
+  var ring = L.circle([lat, lng], {
+    radius: ringRadius,
+    color: '#e94560',
+    weight: 1,
+    opacity: 0.12,
+    fillColor: '#e94560',
+    fillOpacity: 0.2,
+    interactive: false
+  });
+  markerLayer.addLayer(ring);
+  spiderMarkers.push(ring);
+
   items.forEach(function(item, j) {
     var angle = 2 * Math.PI * j / n;
     var pt = L.point(
