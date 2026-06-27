@@ -393,8 +393,8 @@ var DATA =
     },
     {
       "name": "Photos from Arequipa",
-      "lat": -16.4,
-      "lng": -71.54,
+      "lat": -16.4057001,
+      "lng": -71.5400994,
       "year": 2014,
       "country": "Peru",
       "category": "Photos",
@@ -2667,15 +2667,6 @@ function getFilters() {
 
 var COLORS = { Blog: '#e94560', Food: '#f39c12', Cats: '#9b59b6', Home: '#2ecc71', Photos: '#3498db' };
 
-function circleIcon(color) {
-  return L.divIcon({
-    className: '',
-    html: '<div style="width:14px;height:14px;border-radius:50%;background:' + color + ';border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.3);"></div>',
-    iconSize: [14, 14],
-    iconAnchor: [7, 7]
-  });
-}
-
 function countIcon(n) {
   return L.divIcon({
     className: '',
@@ -2693,8 +2684,22 @@ function popupHTML(item) {
     (item.url ? '<a href="' + item.url + '" target="_blank">Read post &rarr;</a>' : '') + '</div>';
 }
 
-function itemColor(item, yearActive) {
-  return yearActive ? (COLORS[item.category] || '#e94560') : '#888';
+function makeCircleMarker(latlng, color) {
+  return L.circleMarker(latlng, {
+    radius: 7,
+    fillColor: color,
+    color: '#fff',
+    weight: 2,
+    opacity: 1,
+    fillOpacity: 0.85
+  });
+}
+
+function makeSoloMarker(item, yearActive) {
+  var color = yearActive ? (COLORS[item.category] || '#e94560') : '#888';
+  var marker = makeCircleMarker([item.lat, item.lng], color);
+  marker.bindPopup(popupHTML(item));
+  return marker;
 }
 
 function spiderfyGroup(badge) {
@@ -2712,44 +2717,45 @@ function spiderfyGroup(badge) {
 
   var radius = 0.003 * n;
   var cos_lat = Math.max(Math.cos(lat * Math.PI / 180), 0.01);
-  var markers = [];
+  var spiderMarkers = [];
 
   items.forEach(function(item, j) {
     var angle = 2 * Math.PI * j / n;
     var mlat = lat + radius * Math.cos(angle);
     var mlng = lng + radius * Math.sin(angle) / cos_lat;
-    var color = itemColor(item, yearActive);
-    var marker = L.marker([mlat, mlng], { icon: circleIcon(color) });
+    var color = yearActive ? (COLORS[item.category] || '#e94560') : '#888';
+    var marker = makeCircleMarker([mlat, mlng], color);
     marker.bindPopup(popupHTML(item));
-    marker.on('mouseenter', function() {
+    marker._spiderCenter = { lat: lat, lng: lng };
+    marker.on('mouseover', function() {
       if (collapseTimer) { clearTimeout(collapseTimer); collapseTimer = null; }
     });
-    marker.on('mouseleave', function() {
+    marker.on('mouseout', function(e) {
       if (collapseTimer) clearTimeout(collapseTimer);
-      collapseTimer = setTimeout(collapseSpider, 300);
+      collapseTimer = setTimeout(collapseSpider, 400);
     });
     markerLayer.addLayer(marker);
-    markers.push(marker);
+    spiderMarkers.push(marker);
   });
 
-  var centerIcon = L.divIcon({
-    className: '',
-    html: '<div style="width:60px;height:60px;border-radius:50%;background:transparent;"></div>',
-    iconSize: [60, 60],
-    iconAnchor: [30, 30]
+  var center = L.circleMarker([lat, lng], {
+    radius: 1,
+    fill: false,
+    stroke: false,
+    interactive: true
   });
-  var center = L.marker([lat, lng], { icon: centerIcon, interactive: true, zIndexOffset: -1000 });
-  center.on('mouseenter', function() {
+  center._spiderCenter = true;
+  center.on('mouseover', function() {
     if (collapseTimer) { clearTimeout(collapseTimer); collapseTimer = null; }
   });
-  center.on('mouseleave', function() {
+  center.on('mouseout', function() {
     if (collapseTimer) clearTimeout(collapseTimer);
-    collapseTimer = setTimeout(collapseSpider, 300);
+    collapseTimer = setTimeout(collapseSpider, 400);
   });
   markerLayer.addLayer(center);
-  markers.push(center);
+  spiderMarkers.push(center);
 
-  activeSpider = { badge: badge, markers: markers };
+  activeSpider = { badge: badge, markers: spiderMarkers };
 }
 
 function collapseSpider() {
@@ -2788,14 +2794,11 @@ function renderMarkers() {
     var lng = items[0].lng;
 
     if (items.length === 1) {
-      var color = itemColor(items[0], yearActive);
-      var marker = L.marker([lat, lng], { icon: circleIcon(color) });
-      marker.bindPopup(popupHTML(items[0]));
-      markerLayer.addLayer(marker);
+      markerLayer.addLayer(makeSoloMarker(items[0], yearActive));
     } else {
       var badge = L.marker([lat, lng], { icon: countIcon(items.length) });
       badge._spiderData = { items: items, lat: lat, lng: lng };
-      badge.on('mouseenter', function() { spiderfyGroup(badge); });
+      badge.on('mouseover', function() { spiderfyGroup(badge); });
       markerLayer.addLayer(badge);
     }
   });
@@ -2814,7 +2817,7 @@ document.getElementById('categoryFilter').addEventListener('change', renderMarke
 
 document.getElementById('resetBtn').addEventListener('click', function() {
   document.getElementById('yearSlider').value = 2025;
-  document.getElementById('yearDisplay').textContent = '2025';
+  document.getElementById('yearDisplay').textContent = '2025;
   document.getElementById('yearFilter').value = 'all';
   document.getElementById('countryFilter').value = 'all';
   document.getElementById('categoryFilter').value = 'all';
