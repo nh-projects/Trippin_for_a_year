@@ -28,8 +28,10 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .marker-popup h3 { margin: 0 0 4px; color: #e94560; font-size: 15px; }
 .marker-popup p { margin: 2px 0; }
 .marker-popup a { color: #3498db; text-decoration: none; font-weight: 600; display: inline-block; margin-top: 4px; }
-.marker-popup a:hover { text-decoration: underline; }
-.category-tag { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 10px; background: #eee; color: #333; }
+  .marker-popup a:hover { text-decoration: underline; }
+  .category-tag { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 10px; background: #eee; color: #333; }
+  .count-tooltip { background: none !important; border: none !important; box-shadow: none !important; color: #fff; font-size: 11px; font-weight: 700; text-align: center; padding: 0 !important; margin: 0 !important; pointer-events: none; }
+
 .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
 .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; opacity: .8; }
 .legend-dot { width: 10px; height: 10px; border-radius: 50%; border: 1px solid rgba(255,255,255,.3); }
@@ -144,15 +146,6 @@ function getFilters() {
 
 var COLORS = { Blog: '#e94560', Food: '#f39c12', Cats: '#9b59b6', Home: '#2ecc71', Photos: '#3498db' };
 
-function countIcon(n) {
-  return L.divIcon({
-    className: '',
-    html: '<div style="width:26px;height:26px;border-radius:50%;background:#333;border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;font-weight:700;box-shadow:0 1px 4px rgba(0,0,0,.4);">' + n + '</div>',
-    iconSize: [26, 26],
-    iconAnchor: [13, 13]
-  });
-}
-
 function popupHTML(item) {
   return '<div class="marker-popup"><h3>' + item.name + '</h3>' +
     '<p><strong>Country:</strong> ' + item.country + ' &middot; <strong>Year:</strong> ' + item.year + '</p>' +
@@ -179,8 +172,28 @@ function makeSoloMarker(item, yearActive) {
   return marker;
 }
 
+function makeBadge(lat, lng, count) {
+  var circle = L.circleMarker([lat, lng], {
+    radius: 13,
+    fillColor: '#333',
+    color: '#fff',
+    weight: 2,
+    fillOpacity: 0.85,
+    interactive: true
+  });
+  circle.bindTooltip(String(count), {
+    permanent: true,
+    direction: 'center',
+    className: 'count-tooltip'
+  });
+  return circle;
+}
+
 function spiderfyGroup(badge) {
-  collapseSpider();
+  if (activeSpider) {
+    if (activeSpider.badge === badge) return;
+    collapseSpider();
+  }
 
   var data = badge._spiderData;
   var items = data.items;
@@ -190,24 +203,27 @@ function spiderfyGroup(badge) {
   var filters = getFilters();
   var yearActive = filters.year < /* YEAR_MAX */ || filters.exactYear !== 'all';
 
+  if (badge._tooltip) badge.closeTooltip();
   markerLayer.removeLayer(badge);
 
-  var radius = 0.003 * n;
-  var cos_lat = Math.max(Math.cos(lat * Math.PI / 180), 0.01);
+  var center = map.latLngToContainerPoint([lat, lng]);
+  var pxRadius = Math.min(20 + 4 * n, 60);
   var spiderMarkers = [];
 
   items.forEach(function(item, j) {
     var angle = 2 * Math.PI * j / n;
-    var mlat = lat + radius * Math.cos(angle);
-    var mlng = lng + radius * Math.sin(angle) / cos_lat;
+    var pt = L.point(
+      center.x + pxRadius * Math.cos(angle),
+      center.y + pxRadius * Math.sin(angle)
+    );
+    var ll = map.containerPointToLatLng(pt);
     var color = yearActive ? (COLORS[item.category] || '#e94560') : '#888';
-    var marker = makeCircleMarker([mlat, mlng], color);
+    var marker = makeCircleMarker([ll.lat, ll.lng], color);
     marker.bindPopup(popupHTML(item));
-    marker._spiderCenter = { lat: lat, lng: lng };
     marker.on('mouseover', function() {
       if (collapseTimer) { clearTimeout(collapseTimer); collapseTimer = null; }
     });
-    marker.on('mouseout', function(e) {
+    marker.on('mouseout', function() {
       if (collapseTimer) clearTimeout(collapseTimer);
       collapseTimer = setTimeout(collapseSpider, 400);
     });
@@ -215,22 +231,22 @@ function spiderfyGroup(badge) {
     spiderMarkers.push(marker);
   });
 
-  var center = L.circleMarker([lat, lng], {
-    radius: 1,
-    fill: false,
-    stroke: false,
-    interactive: true
+  var crossIcon = L.divIcon({
+    className: '',
+    html: '<div style="width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:22px;color:#999;font-weight:300;line-height:1;">+</div>',
+    iconSize: [24, 24],
+    iconAnchor: [12, 12]
   });
-  center._spiderCenter = true;
-  center.on('mouseover', function() {
+  var centerMark = L.marker([lat, lng], { icon: crossIcon, interactive: true, zIndexOffset: 1000 });
+  centerMark.on('mouseover', function() {
     if (collapseTimer) { clearTimeout(collapseTimer); collapseTimer = null; }
   });
-  center.on('mouseout', function() {
+  centerMark.on('mouseout', function() {
     if (collapseTimer) clearTimeout(collapseTimer);
     collapseTimer = setTimeout(collapseSpider, 400);
   });
-  markerLayer.addLayer(center);
-  spiderMarkers.push(center);
+  markerLayer.addLayer(centerMark);
+  spiderMarkers.push(centerMark);
 
   activeSpider = { badge: badge, markers: spiderMarkers };
 }
@@ -273,9 +289,15 @@ function renderMarkers() {
     if (items.length === 1) {
       markerLayer.addLayer(makeSoloMarker(items[0], yearActive));
     } else {
-      var badge = L.marker([lat, lng], { icon: countIcon(items.length) });
+      var badge = makeBadge(lat, lng, items.length);
       badge._spiderData = { items: items, lat: lat, lng: lng };
       badge.on('mouseover', function() { spiderfyGroup(badge); });
+      badge.on('mouseout', function() {
+        if (activeSpider && activeSpider.badge === badge) {
+          if (collapseTimer) clearTimeout(collapseTimer);
+          collapseTimer = setTimeout(collapseSpider, 400);
+        }
+      });
       markerLayer.addLayer(badge);
     }
   });
@@ -294,7 +316,7 @@ document.getElementById('categoryFilter').addEventListener('change', renderMarke
 
 document.getElementById('resetBtn').addEventListener('click', function() {
   document.getElementById('yearSlider').value = /* YEAR_MAX */;
-  document.getElementById('yearDisplay').textContent = '/* YEAR_MAX */;
+  document.getElementById('yearDisplay').textContent = '/* YEAR_MAX */';
   document.getElementById('yearFilter').value = 'all';
   document.getElementById('countryFilter').value = 'all';
   document.getElementById('categoryFilter').value = 'all';
