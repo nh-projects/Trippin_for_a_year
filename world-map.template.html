@@ -276,7 +276,7 @@ function renderMarkers() {
     if (filters.country !== 'all' && item.country !== filters.country) return;
     if (filters.category !== 'all' && item.category !== filters.category) return;
     count++;
-    var key = item.lat.toFixed(4) + ',' + item.lng.toFixed(4);
+    var key = item.lat.toFixed(2) + ',' + item.lng.toFixed(2);
     if (!groups[key]) groups[key] = [];
     groups[key].push(item);
   });
