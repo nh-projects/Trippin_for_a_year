@@ -8,13 +8,13 @@
 
 ### Generators
 
-- **`generate_map.py`** — Fetches the Blogger Atom feed, parses 194+ posts, detects countries from labels/content, matches coordinates, assigns categories (Blog/Food/Home/Photos/Cats), and renders `world-map.template.html` → `world-map.html` with all post markers.
+- **`generate_map.py`** — Fetches the Blogger Atom feed, parses 194+ posts, detects countries from labels/content, matches coordinates, assigns categories (Blog/Trip/Photos/Cats Blog), and renders `world-map.template.html` → `world-map.html` with all post markers.
 
 - **`generate_pages.py`** — Fetches the same feed, detects countries as ISO codes, and renders `countries-tracker.template.html` → `countries-tracker.html` (map + A-Z list of all 196 countries) and `sidebar-widget.template.html` → `sidebar-widget.html` (Blogger sidebar widget with progress bar).
 
 ### Templates
 
-- **`world-map.template.html`** — Template for the interactive world map page. Placeholders: `/* DATA_PLACEHOLDER */`, `/* POST_COUNT */`, `/* YEAR_MIN */`, `/* YEAR_MAX */`.
+- **`world-map.template.html`** — Template for the interactive world map page. Uses Leaflet.markercluster for grouping nearby markers. Sidebar filters: year slider and category (Blog/Trip/Photos/Cats Blog). Placeholders: `/* DATA_PLACEHOLDER */`, `/* POST_COUNT */`, `/* YEAR_MIN */`, `/* YEAR_MAX */`.
 
 - **`countries-tracker.template.html`** — Template for the country tracker page with Leaflet map + searchable A-Z list. Placeholders: `/* DETECTED_COUNTRIES */`, `/* MANUAL_COUNTRIES */`, `/* ALL_COUNTRIES */`, `/* TOTAL */`, `/* NUM_TO_A2 */`.
 
@@ -29,6 +29,7 @@
 ### Other
 
 - **`overrides.json`** — Manual overrides for specific post URLs (country, category, description).
+- **`pre_blog_trips.json`** — Pre-blog trip entries (1993–2013) categorized as "Trip", merged into the world map.
 - **`.feed-cache.xml`** — Cached Atom feed (refreshed after 1 hour).
 - **`requirements.txt`** — Python dependencies.
 - **`Updated_Theme.html`** — Full Blogger theme XML export (not script-generated).
