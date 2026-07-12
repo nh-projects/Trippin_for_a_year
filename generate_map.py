@@ -107,9 +107,9 @@ def detect_category(soup, title, labels):
     heading = first_heading_text(soup)
 
     if re.search(r"Food around the world", heading, re.IGNORECASE):
-        return "Food"
+        return "Blog"
     if re.search(r"Places we stayed in", heading, re.IGNORECASE):
-        return "Home"
+        return "Blog"
     if re.search(r"photos", heading, re.IGNORECASE):
         return "Photos"
     if re.search(r"^photos\b", title, re.IGNORECASE):
@@ -117,13 +117,13 @@ def detect_category(soup, title, labels):
 
     label_text = " ".join(labels).lower()
     if any(term in label_text for term in CAT_TERMS):
-        return "Cats"
+        return "Cats Blog"
     if any(term in title.lower() for term in CAT_TERMS):
-        return "Cats"
+        return "Cats Blog"
 
     text = soup.get_text(separator=" ", strip=True)[:500].lower()
     if re.search(r"\bcat\b|\bcats\b", text):
-        return "Cats"
+        return "Cats Blog"
 
     return "Blog"
 

@@ -29,7 +29,7 @@ def test_all_posts_have_coordinates():
         assert p["lng"] is not None, f"Missing lng for {p['name']}"
         assert p["country"] != "Unknown", f"Unknown country for {p['name']}"
         assert p["country"], f"Empty country for {p['name']}"
-        assert p["category"] in ("Blog", "Food", "Cats", "Home", "Photos"), (
+        assert p["category"] in ("Blog", "Photos", "Cats Blog", "Trip"), (
             f"Unexpected category {p['category']!r} for {p['name']}"
         )
 

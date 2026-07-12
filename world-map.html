@@ -5,7 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Trippin' for a Year — World Map</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; height: 80vh; display: flex; flex-direction: column; margin: 0; }
@@ -30,7 +33,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .marker-popup a { color: #3498db; text-decoration: none; font-weight: 600; display: inline-block; margin-top: 4px; }
   .marker-popup a:hover { text-decoration: underline; }
   .category-tag { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 10px; background: #eee; color: #333; }
-  .count-tooltip { background: none !important; border: none !important; box-shadow: none !important; color: #fff; font-size: 11px; font-weight: 700; text-align: center; padding: 0 !important; margin: 0 !important; pointer-events: none; }
 
 .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
 .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; opacity: .8; }
@@ -62,28 +64,13 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
   </div>
 
   <div class="filter-group">
-    <label>Exact Year</label>
-    <select id="yearFilter">
-      <option value="all">All Years</option>
-    </select>
-  </div>
-
-  <div class="filter-group">
-    <label>Country</label>
-    <select id="countryFilter">
-      <option value="all">All Countries</option>
-    </select>
-  </div>
-
-  <div class="filter-group">
     <label>Category</label>
     <select id="categoryFilter">
       <option value="all">All Categories</option>
       <option value="Blog">Blog</option>
-      <option value="Food">Food</option>
-      <option value="Cats">Cats</option>
-      <option value="Home">Home</option>
+      <option value="Trip">Trip</option>
       <option value="Photos">Photos</option>
+      <option value="Cats Blog">Cats Blog</option>
     </select>
   </div>
 
@@ -91,10 +78,9 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
   <div class="result-count" id="resultCount"></div>
   <div class="legend">
     <div class="legend-item"><span class="legend-dot" style="background:#e94560"></span>Blog</div>
-    <div class="legend-item"><span class="legend-dot" style="background:#f39c12"></span>Food</div>
-    <div class="legend-item"><span class="legend-dot" style="background:#9b59b6"></span>Cats</div>
-    <div class="legend-item"><span class="legend-dot" style="background:#2ecc71"></span>Home</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#16a085"></span>Trip</div>
     <div class="legend-item"><span class="legend-dot" style="background:#3498db"></span>Photos</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#9b59b6"></span>Cats Blog</div>
   </div>
 </div>
 
@@ -169,7 +155,7 @@ var DATA =
       "lng": 138.25,
       "year": 2017,
       "country": "Japan",
-      "category": "Cats",
+      "category": "Cats Blog",
       "url": "https://www.trippinforayear.com/2017/08/cat-island-2-yushima.html",
       "desc": "湯島 Cat Island 🐱 🐱 🐱"
     },
@@ -219,7 +205,7 @@ var DATA =
       "lng": 141.4164456,
       "year": 2016,
       "country": "Japan",
-      "category": "Cats",
+      "category": "Cats Blog",
       "url": "https://www.trippinforayear.com/2016/09/the-cat-island.html",
       "desc": "Ah we finally made it! Ever since we moved to Japan, we always wanted to visit the Cat Island. FYI - there are a number..."
     },
@@ -275,13 +261,13 @@ var DATA =
     },
     {
       "name": "Photos from San Francisco",
-      "lat": 37.77,
-      "lng": -122.42,
+      "lat": 37.7749295,
+      "lng": -122.4194155,
       "year": 2015,
       "country": "United States",
       "category": "Photos",
       "url": "https://www.trippinforayear.com/2015/01/photos-from-san-francisco.html",
-      "desc": "\" height=\"200\" width=\"200\" />"
+      "desc": ""
     },
     {
       "name": "Our last stop - San Francisco",
@@ -379,7 +365,7 @@ var DATA =
       "lng": -71.54,
       "year": 2014,
       "country": "Peru",
-      "category": "Home",
+      "category": "Blog",
       "url": "https://www.trippinforayear.com/2014/11/our-peru-adventure.html",
       "desc": "This is the route we took We just returned from our two weeks adventure travelling around Peru - We had so much fun!..."
     },
@@ -419,7 +405,7 @@ var DATA =
       "lng": -71.97,
       "year": 2014,
       "country": "Peru",
-      "category": "Home",
+      "category": "Blog",
       "url": "https://www.trippinforayear.com/2014/11/photos-from-cusco.html",
       "desc": "The view from our hotel - Wara Wara Photos from Cusco....."
     },
@@ -429,7 +415,7 @@ var DATA =
       "lng": -77.04,
       "year": 2014,
       "country": "Peru",
-      "category": "Home",
+      "category": "Blog",
       "url": "https://www.trippinforayear.com/2014/11/cats-everywhere-our-favourite-place-in.html",
       "desc": "We found this park by accident. We were staying at the Casa Cielo and the Miraflores Central Park / Kennedy Park were..."
     },
@@ -469,7 +455,7 @@ var DATA =
       "lng": -68.83,
       "year": 2014,
       "country": "Argentina",
-      "category": "Cats",
+      "category": "Cats Blog",
       "url": "https://www.trippinforayear.com/2014/10/buenos-aires-to-mendoza.html",
       "desc": "So after almost 3 weeks in Buenos Aires, we were on the move again. We took the overnight bus with CATA International -..."
     },
@@ -529,7 +515,7 @@ var DATA =
       "lng": -56.1851147,
       "year": 2014,
       "country": "Argentina",
-      "category": "Cats",
+      "category": "Cats Blog",
       "url": "https://www.trippinforayear.com/2014/10/bombinhas-to-montevideo-to-buenos-aires.html",
       "desc": "After a very relaxing week in Bombinhas, we were on the move again.... (we are getting a little sick of moving, can you..."
     },
@@ -539,7 +525,7 @@ var DATA =
       "lng": -48.52,
       "year": 2014,
       "country": "Brazil",
-      "category": "Cats",
+      "category": "Cats Blog",
       "url": "https://www.trippinforayear.com/2014/09/from-sao-paulo-to-bombinhas.html",
       "desc": "After a short stay in São Paulo, we headed South. We caught an overnight bus to a little beach town called Balneário..."
     },
@@ -659,7 +645,7 @@ var DATA =
       "lng": 19.04,
       "year": 2014,
       "country": "Hungary",
-      "category": "Cats",
+      "category": "Cats Blog",
       "url": "https://www.trippinforayear.com/2014/08/budapest-recommendation.html",
       "desc": "There are a lot to see and do in Budapest. We only had a few days but we managed to do quite a bit! Here are some of my..."
     },
@@ -959,7 +945,7 @@ var DATA =
       "lng": 9.18592430000001,
       "year": 2014,
       "country": "Italy",
-      "category": "Home",
+      "category": "Blog",
       "url": "https://www.trippinforayear.com/2014/06/last-stop-in-italy-milan.html",
       "desc": "Our last stop in Italy was Milan, financial and fashion capital. Very nice city but also very expensive. We rented a..."
     },
@@ -979,7 +965,7 @@ var DATA =
       "lng": 12.57,
       "year": 2014,
       "country": "Italy",
-      "category": "Food",
+      "category": "Blog",
       "url": "https://www.trippinforayear.com/2014/06/different-kind-of-pastas.html",
       "desc": "There are so many different kind of pasta in Italy. I am always very confused at the restaurant trying to remember..."
     },
@@ -1029,7 +1015,7 @@ var DATA =
       "lng": 12.48018019999995,
       "year": 2014,
       "country": "France",
-      "category": "Home",
+      "category": "Blog",
       "url": "https://www.trippinforayear.com/2014/06/our-journey-to-italy.html",
       "desc": "We survived! OK, so it wasn't really a do or die scenario, but it sure felt like it... What am I on about this time?..."
     },
@@ -1039,7 +1025,7 @@ var DATA =
       "lng": 2.16,
       "year": 2014,
       "country": "Spain",
-      "category": "Cats",
+      "category": "Cats Blog",
       "url": "https://www.trippinforayear.com/2014/06/catching-up-with-shirley-in-barcelona.html",
       "desc": "@ El Xampanyet The best part of traveling around the world is definitely being able to catch up with friends around the..."
     },
@@ -1179,7 +1165,7 @@ var DATA =
       "lng": -7.59,
       "year": 2014,
       "country": "Morocco",
-      "category": "Home",
+      "category": "Blog",
       "url": "https://www.trippinforayear.com/2014/05/our-first-time-on-continent-of-africa.html",
       "desc": "From Istanbul, we flew into Casablanca in Morocco. This was our first time visiting the African continent. We took the..."
     },
@@ -1219,7 +1205,7 @@ var DATA =
       "lng": 25.4615092,
       "year": 2014,
       "country": "Greece",
-      "category": "Cats",
+      "category": "Cats Blog",
       "url": "https://www.trippinforayear.com/2014/05/photos-from-santorini-greece.html",
       "desc": "This was hard. I've taken a LOT of photos in Santorini... probably a few hundred. Though 30% were cat photos...10%..."
     },
@@ -1259,7 +1245,7 @@ var DATA =
       "lng": 28.98,
       "year": 2014,
       "country": "Turkey",
-      "category": "Cats",
+      "category": "Cats Blog",
       "url": "https://www.trippinforayear.com/2014/05/cats-in-istanbul.html",
       "desc": "Cats are everywhere in Turkey - in the parks, restaurants, cafes, bus ticket offices, mosques, churches, shops..."
     },
@@ -1559,7 +1545,7 @@ var DATA =
       "lng": 99.84,
       "year": 2014,
       "country": "Thailand",
-      "category": "Cats",
+      "category": "Cats Blog",
       "url": "https://www.trippinforayear.com/2014/03/cat-cafe.html",
       "desc": "Ohhhhh so cute!!!! We found this cafe by accident on our way to Ban Lorcha Village . This is now my favourite cafe in..."
     },
@@ -1639,7 +1625,7 @@ var DATA =
       "lng": 96.92,
       "year": 2014,
       "country": "Myanmar",
-      "category": "Cats",
+      "category": "Cats Blog",
       "url": "https://www.trippinforayear.com/2014/02/inle-lake-photos.html",
       "desc": "Apart from getting food poisoning, Inle Lake was quite pretty.... Resort on the lake Bar on the lake Beautiful sunset..."
     },
@@ -1829,7 +1815,7 @@ var DATA =
       "lng": 99.3334198,
       "year": 2014,
       "country": "Thailand",
-      "category": "Cats",
+      "category": "Cats Blog",
       "url": "https://www.trippinforayear.com/2014/01/heading-to-island.html",
       "desc": "After an interesting experience at Din Dang, we headed south for an island. But first, a quick stop at Surat Thani for..."
     },
@@ -1839,7 +1825,7 @@ var DATA =
       "lng": 98.7260927,
       "year": 2014,
       "country": "Thailand",
-      "category": "Cats",
+      "category": "Cats Blog",
       "url": "https://www.trippinforayear.com/2014/01/pak-song-photos.html",
       "desc": "Although it was a short stay, we had fun! Thai boy riding with us Thai host family's cat At the TCDF Eco-Logic Arriving..."
     },
@@ -2627,7 +2613,7 @@ var DATA =
 ;
 </script>
 <script>
-var map, markerLayer, collapseTimer, activeSpider;
+var map, markerLayer;
 
 function initMap() {
   map = L.map('map', { zoomControl: true, worldCopyJump: true }).setView([30, 0], 2);
@@ -2635,25 +2621,8 @@ function initMap() {
     maxZoom: 19,
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>'
   }).addTo(map);
-  markerLayer = L.layerGroup().addTo(map);
-
-  var countrySelect = document.getElementById('countryFilter');
-  var countries = [...new Set(DATA.map(function(d) { return d.country; }))].sort();
-  countries.forEach(function(c) {
-    var opt = document.createElement('option');
-    opt.value = c;
-    opt.textContent = c;
-    countrySelect.appendChild(opt);
-  });
-
-  var yearSelect = document.getElementById('yearFilter');
-  var years = [...new Set(DATA.map(function(d) { return d.year; }))].sort();
-  years.forEach(function(y) {
-    var opt = document.createElement('option');
-    opt.value = y;
-    opt.textContent = y;
-    yearSelect.appendChild(opt);
-  });
+  markerLayer = L.markerClusterGroup({ maxClusterRadius: 50 });
+  map.addLayer(markerLayer);
 
   renderMarkers();
 }
@@ -2661,13 +2630,11 @@ function initMap() {
 function getFilters() {
   return {
     year: parseInt(document.getElementById('yearSlider').value, 10),
-    exactYear: document.getElementById('yearFilter').value,
-    country: document.getElementById('countryFilter').value,
     category: document.getElementById('categoryFilter').value
   };
 }
 
-var COLORS = { Blog: '#e94560', Food: '#f39c12', Cats: '#9b59b6', Home: '#2ecc71', Photos: '#3498db' };
+var COLORS = { Blog: '#e94560', Trip: '#16a085', 'Cats Blog': '#9b59b6', Photos: '#3498db' };
 
 function popupHTML(item) {
   return '<div class="marker-popup"><h3>' + item.name + '</h3>' +
@@ -2688,156 +2655,21 @@ function makeCircleMarker(latlng, color) {
   });
 }
 
-function makeSoloMarker(item, yearActive) {
-  var color = yearActive ? (COLORS[item.category] || '#e94560') : '#888';
-  var marker = makeCircleMarker([item.lat, item.lng], color);
-  marker.bindPopup(popupHTML(item));
-  return marker;
-}
-
-function makeBadge(lat, lng, count) {
-  var circle = L.circleMarker([lat, lng], {
-    radius: 13,
-    fillColor: '#333',
-    color: '#fff',
-    weight: 2,
-    fillOpacity: 0.85,
-    interactive: true
-  });
-  circle.bindTooltip(String(count), {
-    permanent: true,
-    direction: 'center',
-    className: 'count-tooltip'
-  });
-  return circle;
-}
-
-function spiderfyGroup(badge) {
-  if (activeSpider) {
-    if (activeSpider.badge === badge) return;
-    collapseSpider();
-  }
-
-  var data = badge._spiderData;
-  var items = data.items;
-  var lat = data.lat;
-  var lng = data.lng;
-  var n = items.length;
-  var filters = getFilters();
-  var yearActive = filters.year < 2025 || filters.exactYear !== 'all';
-
-  if (badge._tooltip) badge.closeTooltip();
-  markerLayer.removeLayer(badge);
-
-  var center = map.latLngToContainerPoint([lat, lng]);
-  var pxRadius = Math.min(20 + 4 * n, 60);
-  var spiderMarkers = [];
-
-  var ringPx = pxRadius + 10;
-  var ringEdge = map.containerPointToLatLng(L.point(center.x + ringPx, center.y));
-  var ringRadius = map.distance([lat, lng], [ringEdge.lat, ringEdge.lng]);
-  var ring = L.circle([lat, lng], {
-    radius: ringRadius,
-    color: '#e94560',
-    weight: 1,
-    opacity: 0.12,
-    fillColor: '#e94560',
-    fillOpacity: 0.2,
-    interactive: false
-  });
-  markerLayer.addLayer(ring);
-  spiderMarkers.push(ring);
-
-  items.forEach(function(item, j) {
-    var angle = 2 * Math.PI * j / n;
-    var pt = L.point(
-      center.x + pxRadius * Math.cos(angle),
-      center.y + pxRadius * Math.sin(angle)
-    );
-    var ll = map.containerPointToLatLng(pt);
-    var color = yearActive ? (COLORS[item.category] || '#e94560') : '#888';
-    var marker = makeCircleMarker([ll.lat, ll.lng], color);
-    marker.bindPopup(popupHTML(item));
-    marker.on('mouseover', function() {
-      if (collapseTimer) { clearTimeout(collapseTimer); collapseTimer = null; }
-    });
-    marker.on('mouseout', function() {
-      if (collapseTimer) clearTimeout(collapseTimer);
-      collapseTimer = setTimeout(collapseSpider, 400);
-    });
-    markerLayer.addLayer(marker);
-    spiderMarkers.push(marker);
-  });
-
-  var crossIcon = L.divIcon({
-    className: '',
-    html: '<div style="width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:22px;color:#999;font-weight:300;line-height:1;">+</div>',
-    iconSize: [24, 24],
-    iconAnchor: [12, 12]
-  });
-  var centerMark = L.marker([lat, lng], { icon: crossIcon, interactive: true, zIndexOffset: 1000 });
-  centerMark.on('mouseover', function() {
-    if (collapseTimer) { clearTimeout(collapseTimer); collapseTimer = null; }
-  });
-  centerMark.on('mouseout', function() {
-    if (collapseTimer) clearTimeout(collapseTimer);
-    collapseTimer = setTimeout(collapseSpider, 400);
-  });
-  markerLayer.addLayer(centerMark);
-  spiderMarkers.push(centerMark);
-
-  activeSpider = { badge: badge, markers: spiderMarkers };
-}
-
-function collapseSpider() {
-  if (collapseTimer) { clearTimeout(collapseTimer); collapseTimer = null; }
-  if (!activeSpider) return;
-  activeSpider.markers.forEach(function(m) { markerLayer.removeLayer(m); });
-  markerLayer.addLayer(activeSpider.badge);
-  activeSpider = null;
-}
-
 function renderMarkers() {
-  if (collapseTimer) { clearTimeout(collapseTimer); collapseTimer = null; }
-  activeSpider = null;
   markerLayer.clearLayers();
 
   var filters = getFilters();
-  var yearActive = filters.year < 2025 || filters.exactYear !== 'all';
-  var groups = {};
+  var yearActive = filters.year < 2025;
   var count = 0;
 
   DATA.forEach(function(item) {
-    if (filters.exactYear !== 'all') {
-      if (item.year !== parseInt(filters.exactYear, 10)) return;
-    } else if (filters.year < 2025 && item.year > filters.year) return;
-    if (filters.country !== 'all' && item.country !== filters.country) return;
+    if (filters.year < 2025 && item.year > filters.year) return;
     if (filters.category !== 'all' && item.category !== filters.category) return;
     count++;
-    var key = item.lat.toFixed(2) + ',' + item.lng.toFixed(2);
-    if (!groups[key]) groups[key] = [];
-    groups[key].push(item);
-  });
-
-  Object.keys(groups).forEach(function(key) {
-    var items = groups[key];
-    var lat = items[0].lat;
-    var lng = items[0].lng;
-
-    if (items.length === 1) {
-      markerLayer.addLayer(makeSoloMarker(items[0], yearActive));
-    } else {
-      var badge = makeBadge(lat, lng, items.length);
-      badge._spiderData = { items: items, lat: lat, lng: lng };
-      badge.on('mouseover', function() { spiderfyGroup(badge); });
-      badge.on('mouseout', function() {
-        if (activeSpider && activeSpider.badge === badge) {
-          if (collapseTimer) clearTimeout(collapseTimer);
-          collapseTimer = setTimeout(collapseSpider, 400);
-        }
-      });
-      markerLayer.addLayer(badge);
-    }
+    var color = yearActive ? (COLORS[item.category] || '#e94560') : '#888';
+    var marker = makeCircleMarker([item.lat, item.lng], color);
+    marker.bindPopup(popupHTML(item));
+    markerLayer.addLayer(marker);
   });
 
   document.getElementById('resultCount').textContent = count + ' posts';
@@ -2848,15 +2680,11 @@ document.getElementById('yearSlider').addEventListener('input', function() {
   renderMarkers();
 });
 
-document.getElementById('yearFilter').addEventListener('change', renderMarkers);
-document.getElementById('countryFilter').addEventListener('change', renderMarkers);
 document.getElementById('categoryFilter').addEventListener('change', renderMarkers);
 
 document.getElementById('resetBtn').addEventListener('click', function() {
   document.getElementById('yearSlider').value = 2025;
   document.getElementById('yearDisplay').textContent = '2025';
-  document.getElementById('yearFilter').value = 'all';
-  document.getElementById('countryFilter').value = 'all';
   document.getElementById('categoryFilter').value = 'all';
   renderMarkers();
 });
